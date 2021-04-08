@@ -50,6 +50,26 @@ let rec computed_fixed_point eq f x =
     if eq (fun f x -> f x) x
     then x
     else computed_fixed_point eq f (fun f x -> f x);; 
-    
+
+(*Q7. Write a function filter_reachable g that returns a copy of 
+the grammar g with all unreachable rules removed. This function 
+should preserve the order of rules: that is, all rules that are 
+returned should be in the same order as the rules in g. *)
+(*Def to run sample tests *)
+type ('nonterminal, 'terminal) symbol = 
+    | N of 'nonterminal
+    | T of 'terminal;;
+
+(* Filter all symbols to get list of nonterm symbols *)
+let isNonterm = function
+    | N nonterminal -> true
+    | T terminal -> false;;
+let getListNonterm totalList = List.filter isNonterm totalList;;
+
+
+(* Filter all rules to get nonterm symbols for rules *)
+
+
+
     
 
