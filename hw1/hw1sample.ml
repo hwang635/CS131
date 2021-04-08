@@ -24,17 +24,12 @@ let set_union_test0 = equal_sets (set_union [] [1;2;3]) [1;2;3]
 let set_union_test1 = equal_sets (set_union [3;1;3] [1;2;3]) [1;2;3]
 let set_union_test2 = equal_sets (set_union [] []) []
 
-let set_intersection_test0 =
-  equal_sets (set_intersection [] [1;2;3]) []
-let set_intersection_test1 =
-  equal_sets (set_intersection [3;1;3] [1;2;3]) [1;3]
-let set_intersection_test2 =
-  equal_sets (set_intersection [1;2;3;4] [3;1;2;4]) [4;3;2;1]
-
-let set_diff_test0 = equal_sets (set_diff [1;3] [1;4;3;1]) []
-let set_diff_test1 = equal_sets (set_diff [4;3;1;1;3] [1;3]) [4]
-let set_diff_test2 = equal_sets (set_diff [4;3;1] []) [1;3;4]
-let set_diff_test3 = equal_sets (set_diff [] [4;3;1]) []
+let set_all_union_test0 =
+  equal_sets (set_all_union []) []
+let set_all_union_test1 =
+  equal_sets (set_all_union [[3;1;3]; [4]; [1;2;3]]) [1;2;3;4]
+let set_all_union_test2 =
+  equal_sets (set_all_union [[5;2]; []; [5;2]; [3;5;7]]) [2;3;5;7]
 
 let computed_fixed_point_test0 =
   computed_fixed_point (=) (fun x -> x / 2) 1000000000 = 0

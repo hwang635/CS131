@@ -31,3 +31,25 @@ let set_all_union a =
     match a with
     | [] -> []
     | head :: rest -> List.fold_left set_union head rest;;
+
+(*Q5. It's not possible to write a fx self_member that identifies if
+a set is a member of itself. The only way for a set to be a member of
+itself is for the set to have a member that is the set containing
+itself which also needs to contain itself and so on, creating an
+infinite set. A function checking for this would therefore have to
+loop infintely in order to find a self member, which is not feasible *)
+
+(*Q6. Write a function computed_fixed_point eq f x that returns the 
+computed fixed point for f with respect to x, assuming that eq is 
+the equality predicate for f's domain. A common case is that eq will
+be (=), that is, the builtin equality predicate of OCaml; but any 
+predicate can be used. If there is no computed fixed point, your 
+implementation can do whatever it wants. *)
+(* Based off TA's hint code *)
+let rec computed_fixed_point eq f x =
+    if eq (fun f x -> f x) x
+    then x
+    else computed_fixed_point eq f (fun f x -> f x);; 
+    
+    
+
