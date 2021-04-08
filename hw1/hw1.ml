@@ -20,3 +20,14 @@ let equal_sets a b = (subset a b) && (subset b a);;
 
 (* Q3. Write a function set_union a b that returns a list 
 representing a∪b. *)
+(* Concat a + b then call sort_uniq to sort + remove duplicates *)
+let set_union a b = List.sort_uniq compare (a@b);;
+
+(* Q4. Write a function set_all_union a that returns a list 
+representing ∪[x∈a]x, i.e., the union of all the members of 
+the set a; a should represent a set of sets. *)
+(* Go through each set in a + call set_union, using fold_left *)
+let set_all_union a = 
+    match a with
+    | [] -> []
+    | head :: rest -> List.fold_left set_union head rest;;

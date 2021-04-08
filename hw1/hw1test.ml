@@ -16,5 +16,23 @@ let equal_sets_test1 = not (equal_sets [1;3;4] [3;1;3])
 let my_equal_sets_test0 = equal_sets [] [[]]
 let my_equal_sets_test1 = equal_sets ["hello"; "world"; "hi"] ["hello"; "hello"]
 
+(*Tests for q3 set_union, sb true *)
+let set_union_test0 = equal_sets (set_union [] [1;2;3]) [1;2;3]
+let set_union_test1 = equal_sets (set_union [3;1;3] [1;2;3]) [1;2;3]
+let set_union_test2 = equal_sets (set_union [] []) []
+let my_set_union_test0 = equal_sets(set_union ["a";"b";"c"] ["d"]) ["a";"b";"c";"d"]
+let my_set_union_test1 = equal_sets(set_union [5;4;3;3;3;2] [1;3;3;3]) [1;2;3;4;5]
 
-
+(*Tests for q4 set_all_union, sb true *)
+let set_all_union_test0 =
+  equal_sets (set_all_union []) []
+let set_all_union_test1 =
+  equal_sets (set_all_union [[3;1;3]; [4]; [1;2;3]]) [1;2;3;4]
+let set_all_union_test2 =
+  equal_sets (set_all_union [[5;2]; []; [5;2]; [3;5;7]]) [2;3;5;7]
+let my_set_all_union_test0 =
+    equal_sets (set_all_union [[1]; [2]; [2]; [2]; [3]; [4]]) [1;2;3;4]
+let my_set_all_union_test1 =
+    equal_sets (set_all_union [[3;2;1]; [1;2;3]; [2;2;2]]) [1;2;3]
+let my_set_all_union_test2 =
+    equal_sets (set_all_union [["a"; "b"]; ["cat"]]) ["a";"b";"cat"]
