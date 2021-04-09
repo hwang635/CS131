@@ -1,0 +1,35 @@
+
+
+Q1. For a to be a subset of b, each element of a needs to exist in b. I
+checked this with a recursive function that checked whether the head of
+the unchecked sub-a was in b and stopped when a was completely checked.
+I chose the recursive approach because it was most intuitive and used
+List.exists to easily check if an element was in the list.
+
+Q2. For a and b to be equal, a must be a subset of b and b must be a subset
+of b. This was easily done using the subset function from q1, though this
+way may not be the most time and space efficient bc it needs 2 function
+calls and may have some redundant checking.
+
+Q3. To get the union of a and b, I concatenated a and b together, then
+called a List module fx to sort it in ascending order and remove
+duplicates. This had the advantage of being simple, but was not optimally
+time efficient because the sort function needs to go over the a+b list
+a second time and remove duplicates, when a slightly more complex way
+could parse through a + b together and remove duplicates before combining.
+
+Q4. To get all unions, I used the set_union function from q4 and the
+fold_left function to apply set_union recursively to all sets in a.
+This had the advantage of being simple, but again not optimally time
+and space efficient because of the inefficiency of set_union.
+
+Q6. I solved this question based off the TA's hint code. I recursively
+performed the function operation until the fixed point value was found,
+which seems to be the most simple and intuitive way.
+
+Q7. I solved this based off the TA's help code. I solved this by filtering
+the grammar for nonterminal symbols and rules, then filtering for the
+reachable symbols that correspond to rules. I used many helper functions 
+for convenience, though that probably added overhead. I could have used
+computed_fixed_point, but I came across many bugs that were not worth
+to debug.

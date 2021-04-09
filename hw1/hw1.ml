@@ -37,7 +37,10 @@ a set is a member of itself. The only way for a set to be a member of
 itself is for the set to have a member that is the set containing
 itself which also needs to contain itself and so on, creating an
 infinite set. A function checking for this would therefore have to
-loop infintely in order to find a self member, which is not feasible *)
+loop infintely in order to find a self member, which is not feasible.
+Also, an OCaml list can only have 1 type. Since we are only dealing with
+lists, a set list would need to contain 2 diff types (member type + set
+type) in order to contain itself, which isn't possible. *)
 
 (*Q6. Write a function computed_fixed_point eq f x that returns the 
 computed fixed point for f with respect to x, assuming that eq is 
@@ -47,29 +50,58 @@ predicate can be used. If there is no computed fixed point, your
 implementation can do whatever it wants. *)
 (* Based off TA's hint code *)
 let rec computed_fixed_point eq f x =
-    if eq (fun f x -> f x) x
+    if eq (f x) x
     then x
-    else computed_fixed_point eq f (fun f x -> f x);; 
+    else computed_fixed_point eq f (f x);; 
 
 (*Q7. Write a function filter_reachable g that returns a copy of 
 the grammar g with all unreachable rules removed. This function 
 should preserve the order of rules: that is, all rules that are 
 returned should be in the same order as the rules in g. *)
-(*Def to run sample tests *)
 type ('nonterminal, 'terminal) symbol = 
     | N of 'nonterminal
     | T of 'terminal;;
 
-(* Filter all symbols to get list of nonterm symbols *)
 let isNonterm = function
     | N nonterminal -> true
     | T terminal -> false;;
-let getListNonterm totalList = List.filter isNonterm totalList;;
 
+(* Filter symbols to get list of nonterm symbols *)
+let rec filterNonterm totalList =
+    match totalList with
+    | [] -> []
+    | head::rest -> 
+        match head with
+            | N nonterm -> nonterm::(filterNonterm rest)
+            | T term -> filterNonterm rest;;
 
 (* Filter all rules to get nonterm symbols for rules *)
+let rec getNonTermPerRules nonTermList rules = 
+    match rules with
+    | [] -> nonTermList
+    | head:: rest ->
+        if List.mem (fst head) nonTermList
+        then
+            let newList = filterNonterm (snd head) in
+            getNonTermPerRules (set_union nonTermList newList) rest
+        else getNonTermPerRules nonTermList rest;;
+        
+let rec getAllNontermRules nonTermList totalRules =
+    let newList = getNonTermPerRules nonTermList totalRules in
+    if equal_sets newList nonTermList
+    then nonTermList
+    else getNonTermPerRules newList totalRules;;
 
+(* Use list.filter to filter out reachable rules from all rules *)
+let filterReachableRules reachableSymbols rulesList =
+    List.filter (fun rule -> List.mem (fst rule) reachableSymbols) rulesList;;
 
-
-    
-
+(* Based off TA hint code *)
+let filter_reachable g =
+    (* Separate start (first elem) from rules (second elem) *)
+    let startSymbol = (fst g) in 
+    let rules = (snd g) in
+    (* Get reachable symbols *)
+    let reachableSymbols = getAllNontermRules [startSymbol] rules in
+    (* Filter rules *)
+    (startSymbol, filterReachableRules reachableSymbols rules);;
