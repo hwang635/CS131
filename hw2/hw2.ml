@@ -19,14 +19,16 @@ equivalent to the Homework 1-style grammar awksub_grammar. *)
 that correspond to that nonterm *)
 let rec prodFx nonterm rulesList =
     match rulesList with
-    | [] -> rulesList (*Empty list, done! *)
+    | [] -> [] (*Empty list, done! *)
     | head::rest -> 
         (* If start symbol = nonterm, concat RHS to rulesList *)
-        if (fst head) = nonterm then [snd head]@(prodFx nonterm rest)
-        else prodFx nonterm rest
+        let start = (fst head) in
+        if start = nonterm then [snd head]@(prodFx nonterm rest)
+        else prodFx nonterm rest;;
+    
 (* Convert HW1 grammar + ret HW2 grammar *)
 let convert_grammar gram1 = 
     (* Separate start (first elem) from rules (second elem) *)
-    let startSymbol = (fst gram1) in
+    let start = (fst gram1) in
     let rulesList = (snd gram1) in
-    (startSymbol, prodFx rulesList)
+    (start, function nonterm -> (prodFx nonterm rulesList));;
