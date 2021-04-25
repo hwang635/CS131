@@ -48,3 +48,54 @@ let rec getTreeLeaves tree =
 (* Calls helper fx to get parsed list of leaves, from left to right *)
 let parse_tree_leaves tree =
     getTreeLeaves [tree];;
+
+(* Write a function make_matcher gram that returns a matcher for the 
+grammar gram. When applied to an acceptor accept and a fragment frag, 
+the matcher must try the grammar rules in order and return the result
+of calling accept on the suffix corresponding to the first acceptable
+matching prefix of frag; this is not necessarily the shortest or the 
+longest acceptable match. A match is considered to be acceptable if 
+accept succeeds when given the suffix fragment that immediately 
+follows the matching prefix. When this happens, the matcher returns 
+whatever the acceptor returned. If no acceptable match is found, the 
+matcher returns None. *)
+let isNonterm = function
+    | N nonterminal -> true
+    | T terminal -> false;;
+
+(* Parses current rule *)
+let rec matchRule grammarFx rulesList accept frag =
+    match rulesList with
+    | [] -> accept frag
+    | head::rest ->
+        (* ret None to backtrack if have rule + empty frag *)
+        if frag = [] then None
+        else 
+            if isNonterm head = true then match head with
+                | T _ -> None
+                | N symbol -> 
+                    let newRulesList = grammarFx symbol in
+                    let nextAccept = matchRule grammarFx rest accept in (* curried fx *)
+                    matcherHelper grammarFx newRulesList nextAccept frag
+            else match head with
+                | T symbol -> 
+                    if List.hd frag = symbol then
+                        let nextAccept = matchRule grammarFx rest accept in
+                        let nextFrag = List.tl frag in
+                        nextAccept nextFrag
+                    else None
+                | N _ -> None
+    and matcherHelper grammarFx rulesList accept frag =
+        match rulesList with
+        | [] -> None
+        | head::rest -> (* Calls fx to parse current rule *)
+            let subMatch = matchRule grammarFx head accept frag in
+            match subMatch with
+                | None -> matcherHelper grammarFx rest accept frag
+                | Some x -> Some x;;
+ 
+ let make_matcher gram = 
+    (* calls grammar fx (2nd elem) on start symbol (1st elem) to get rules *)
+    let grammarFx = (snd gram) in
+    let rulesList = grammarFx (fst gram) in
+    matcherHelper grammarFx rulesList;;
