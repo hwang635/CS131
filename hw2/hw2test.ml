@@ -1,4 +1,4 @@
-(* From hw1, for testing warmup *)
+(* From hw1, for testing warmup
 type awksub_nonterminals =
   | Expr | Lvalue | Incrop | Binop | Num
 
@@ -45,6 +45,38 @@ let tree = Node (Expr,
                                                     [Leaf "$";
                                                      Node (Expr,
                                                             [Node (Term, [Node (Num, [Leaf "1"])])])])])])])
-(* parse_tree_leaves tree = sentence *)
+parse_tree_leaves tree = sentence *)
 
-(* Make matcher *)
+(* Make matcher testing *)
+let accept_all string = Some string (* From hw2sample *)
+let accept_empty_suffix = function
+   | _::_ -> None
+   | x -> Some x
+
+type myNonterms = 
+  | Noun | Adj | Adv | Verb | Article | Phrase
+
+let prodFx = function
+  | Phrase -> 
+      [[N Noun; N Verb];
+      [N Adj; N Noun; N Verb];
+      [N Noun; N Article; N Noun];
+      [N Adj; N Noun; N Adv; N Verb];]
+  | Noun ->
+    [[T "student"]; [T "cat"]; [T "dog"]]
+  | Adj ->
+    [[T "smart"]; [T "lazy"]; [T "sleepy"]; [T "tasty"]]
+  | Adv ->
+    [[T "sadly"]; [T "slowly"]]
+  | Verb ->
+    [[T "programs"]; [T "sleeps"]; [T "cooks"]]
+  | Article ->
+      [[T "the"]; [T "of"]; [T "a"]; [T "for"]]
+
+let myGrammar = (Phrase, prodFx)
+
+let frag1 = ["lazy"; "cat"; "sadly"; "programs"]
+let frag2 = ["dog"; "happily"; "programs";]
+
+let make_matcher_test0 = ((make_matcher myGrammar accept_empty_suffix frag1) = Some [])
+let make_matcher_test1 = ((make_matcher myGrammar accept_empty_suffix frag2) = None)

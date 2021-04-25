@@ -99,3 +99,6 @@ let rec matchRule grammarFx rulesList accept frag =
     let grammarFx = (snd gram) in
     let rulesList = grammarFx (fst gram) in
     matcherHelper grammarFx rulesList;;
+
+(* Placeholder default make_parse *)
+let make_parser gram frag = None;;
