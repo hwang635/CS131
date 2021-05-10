@@ -8,22 +8,14 @@ class SingleThreadedGZipCompressor {
     private final static int GZIP_MAGIC = 0x8b1f;
     private final static int TRAILER_SIZE = 8;
     
-    BufferedReader inputReader; //Holds input from stdin
+    BufferedInputStream inputReader; //Holds input from stdin
     public ByteArrayOutputStream outStream;
     private CRC32 crc = new CRC32();
 
    /* Reads in input from filename */
    public SingleThreadedGZipCompressor() {
       //Read in from stdin + put input in inputReader
-      try {
-         inputReader = new BufferedReader(new InputStreamReader(System.in));
-         for(String s = null; (s=inputReader.readLine()) != null;) {
-            System.out.println(s);
-         }
-      } catch (IOException e) {
-         //Auto-generated catch block
-         e.printStackTrace();
-      }
+      inputReader = new BufferedInputStream(System.in);
 
       //Init output stream
       this.outStream = new ByteArrayOutputStream();
@@ -83,22 +75,17 @@ class SingleThreadedGZipCompressor {
       /* Init deflator that does compressing */
       Deflater compressor = new Deflater(Deflater.DEFAULT_COMPRESSION, true);
 
-      /* Get length of input + init InputStream from file */
-      File file = new File(this.fileName);
-      long fileBytes = file.length();
-      InputStream inStream = new FileInputStream(file);
-
-      /* Init bytes counter + hasDict bool to keep track */
+      /* Init bytes counter + hasDict bool to keep track of processed input */
       long totalBytesRead = 0;
       boolean hasDict = false;
-      /* read() rets next byte of data or -1 if end of stream reached */
-      int nBytes = inStream.read(blockBuf);
-      totalBytesRead += nBytes;
+      /* reads next BLOCK_SIZE # of bytes into blockBuf, rets # of bytes read or -1 if end reached */
+      int currentBytesRead = inputReader.read(blockBuf, 0, BLOCK_SIZE);
  
       /* Loop + read in data until end of stream reached */
-      while (nBytes > 0) {
+      while (currentBytesRead > 0) {
+         totalBytesRead += currentBytesRead;
          /* Update the CRC checksum every time we read in a new block. */
-         crc.update(blockBuf, 0, nBytes);
+         crc.update(blockBuf, 0, currentBytesRead);
          
          //Resets so new input data can be processed
          compressor.reset();
@@ -109,11 +96,11 @@ class SingleThreadedGZipCompressor {
          }
          
          //Set input data for compression
-         compressor.setInput(blockBuf, 0, nBytes);
+         compressor.setInput(blockBuf, 0, currentBytesRead);
      
-         /* If we've read all the bytes in the file, this is the last block.
+         /* If # of bytes read < block_size, this is the last block bc no more chars to read.
             We have to clean out the deflater properly */
-         if (totalBytesRead == fileBytes) {
+         if (currentBytesRead < BLOCK_SIZE) {
             if (!compressor.finished()) {
                compressor.finish(); //Comp ends w/ current contents of input buffer
                while (!compressor.finished()) {
@@ -136,20 +123,19 @@ class SingleThreadedGZipCompressor {
 
          /* If we read in enough bytes in this block, store the last part as the dictionary for the
          next iteration */ 
-         if (nBytes >= DICT_SIZE) {
-            System.arraycopy(blockBuf, nBytes - DICT_SIZE, dictBuf, 0, DICT_SIZE);
+         if (currentBytesRead >= DICT_SIZE) {
+            System.arraycopy(blockBuf, currentBytesRead - DICT_SIZE, dictBuf, 0, DICT_SIZE);
             hasDict = true;
          } else {
             hasDict = false;
          }
          
-         nBytes = inStream.read(blockBuf);
-         totalBytesRead += nBytes;
+         currentBytesRead = inputReader.read(blockBuf, 0, BLOCK_SIZE);
       }
 
       /* Finally, write the trailer and then write to STDOUT */
       byte[] trailerBuf = new byte[TRAILER_SIZE];
-      writeTrailer(fileBytes, trailerBuf, 0);
+      writeTrailer(totalBytesRead, trailerBuf, 0);
       outStream.write(trailerBuf);
 
       outStream.writeTo(System.out);
