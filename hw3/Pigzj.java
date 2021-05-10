@@ -12,14 +12,20 @@ class SingleThreadedGZipCompressor {
     public ByteArrayOutputStream outStream;
     private CRC32 crc = new CRC32();
 
+    //# of processes
+    int numProc = -1;
+
    /* Reads in input from filename */
-   public SingleThreadedGZipCompressor() {
-      //Read in from stdin + put input in inputReader
+   public SingleThreadedGZipCompressor(int p) {
+      //Set # of processes
+      int numProc = p;
+
+      //Read in from stdin + puts input in inputReader
       inputReader = new BufferedInputStream(System.in);
 
       //Init output stream
       this.outStream = new ByteArrayOutputStream();
-    }
+   }
 
    private void writeHeader() throws IOException {
       outStream.write(new byte[] {
@@ -143,8 +149,31 @@ class SingleThreadedGZipCompressor {
 }
 
 public class Pigzj {
-   public static void main (String[] args) throws FileNotFoundException, IOException {
-      SingleThreadedGZipCompressor cmp = new SingleThreadedGZipCompressor();
+   public static void main (String[] args) throws FileNotFoundException, IOException {      
+      int numProc = -1;
+      //No p argument, default # of processes
+      if(args.length == 0) {
+         numProc = Runtime.getRuntime().availableProcessors();
+      } else if (args.length == 2) { //Correct # of args, find req # of processes 
+         if(!args[0].equals("-p")) {
+            System.err.println("Error: only valid argument is -p processes.");
+         }
+         //Check that # entered is valid + set if valid
+         try {
+            int proc = Integer.parseInt(args[1]);
+            numProc = proc;
+            if(proc < 1) {
+               System.err.println("Error: # of processes must be an positive integer.");
+            }
+         } catch (NumberFormatException e) {
+            System.err.println("Error: # of processes must be an positive integer.");
+         }
+      } else { //Incorrect # of args
+         System.err.println("Error: invalid number of arguments.");
+      }
+
+      SingleThreadedGZipCompressor cmp = new SingleThreadedGZipCompressor(numProc);
+      //System.out.println(numProc);
       cmp.compress();
    }
 }
