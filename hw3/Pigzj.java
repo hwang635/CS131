@@ -8,18 +8,29 @@ class SingleThreadedGZipCompressor {
     private final static int GZIP_MAGIC = 0x8b1f;
     private final static int TRAILER_SIZE = 8;
     
-    public String fileName;
+    BufferedReader inputReader; //Holds input from stdin
     public ByteArrayOutputStream outStream;
     private CRC32 crc = new CRC32();
 
-   /* Need to change to read in from STDIN */
-    public SingleThreadedGZipCompressor(String fileName) {
-      this.fileName = fileName;
+   /* Reads in input from filename */
+   public SingleThreadedGZipCompressor() {
+      //Read in from stdin + put input in inputReader
+      try {
+         inputReader = new BufferedReader(new InputStreamReader(System.in));
+         for(String s = null; (s=inputReader.readLine()) != null;) {
+            System.out.println(s);
+         }
+      } catch (IOException e) {
+         //Auto-generated catch block
+         e.printStackTrace();
+      }
+
+      //Init output stream
       this.outStream = new ByteArrayOutputStream();
     }
 
-    private void writeHeader() throws IOException {
-       outStream.write(new byte[] {
+   private void writeHeader() throws IOException {
+      outStream.write(new byte[] {
          (byte) GZIP_MAGIC,        // Magic number (short)
          (byte)(GZIP_MAGIC >> 8),  // Magic number (short)
          Deflater.DEFLATED,        // Compression method (CM)
@@ -61,8 +72,8 @@ class SingleThreadedGZipCompressor {
    }
 
    public void compress() throws FileNotFoundException, IOException {
-       this.writeHeader();
-       this.crc.reset();
+      this.writeHeader();
+      this.crc.reset();
 
       /* Buffers for input blocks, compressed bocks, and dictionaries */
       byte[] blockBuf = new byte[BLOCK_SIZE];
@@ -72,7 +83,7 @@ class SingleThreadedGZipCompressor {
       /* Init deflator that does compressing */
       Deflater compressor = new Deflater(Deflater.DEFAULT_COMPRESSION, true);
 
-      /* Init File obj using filename, get length, + init InputStream from file */
+      /* Get length of input + init InputStream from file */
       File file = new File(this.fileName);
       long fileBytes = file.length();
       InputStream inStream = new FileInputStream(file);
@@ -145,9 +156,9 @@ class SingleThreadedGZipCompressor {
    }
 }
 
-public class JPigz {
+public class Pigzj {
    public static void main (String[] args) throws FileNotFoundException, IOException {
-      SingleThreadedGZipCompressor cmp = new SingleThreadedGZipCompressor(args[0]);
+      SingleThreadedGZipCompressor cmp = new SingleThreadedGZipCompressor();
       cmp.compress();
    }
 }
