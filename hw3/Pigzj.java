@@ -71,32 +71,42 @@ class SingleThreadedGZipCompressor {
       this.crc.reset();
 
       /* Only 1 reader thread (tried to have multiple, didn't work) */
-      RunnableInput inputReader = new RunnableInput(crc, numThreads);
-      Thread inputReaderThread = new Thread(inputReader);
-      inputReaderThread.start();
       /*ExecutorService readerThreadPool = Executors.newFixedThreadPool(1);  
       RunnableInput inputReader = new RunnableInput(crc, numThreads);
       readerThreadPool.execute(inputReader); */
+      RunnableInput inputReader = new RunnableInput(crc, numThreads); //Needs to be same crc or else mismatch
+      Thread inputReaderThread = new Thread(inputReader);
+      inputReaderThread.start();
 
       ArrayList<RunnableCompress> compressedBlocks = inputReader.threadArr;
-      //Go through each input block/process in order + print out
-      int i = 0; //index of current block
+      boolean allDone = false;
+      int i = 0;
+      int numBlocks = 0;
+      //Loop until all blocks done deflating
       for(;;) {
+         numBlocks = compressedBlocks.size();
          //If went through everything in array + thread dead, done!
-         if(i >= compressedBlocks.size() && !inputReaderThread.isAlive()) {
+         if(i >= numBlocks && !inputReaderThread.isAlive()) {
+            allDone = true;
             break;
-         }
-         int numBlocks = compressedBlocks.size();
-         //If ith block has finished deflation, print it out + move to next block
-         if(i < numBlocks) {
-            RunnableCompress currentBlock = compressedBlocks.get(i);
-            if(currentBlock.getFinished()) {
-               outStream.write(currentBlock.cmpBlockBuf, 0, currentBlock.getDeflatedBytes());
+         } else if (i >= numBlocks) {
+            continue;
+         } else { //i < numBlocks
+            //This block is done, mark as done + write
+            if(compressedBlocks.get(i).getFinished()) {
                ++i;
             }
          }
       }
-      //inputReaderThread.stop(); DEPRECATED
+
+      //When all compressions done, print out all blocks in order
+      if(allDone == true) {
+         for(int j = 0; j<numBlocks; ++j) {
+            RunnableCompress currentBlock = compressedBlocks.get(j);
+            outStream.write(currentBlock.cmpBlockBuf, 0, currentBlock.getDeflatedBytes());
+         }
+         //inputReaderThread.stop(); DEPRECATED
+      }
 
       /* Finally, write the trailer and then write to STDOUT */
       byte[] trailerBuf = new byte[TRAILER_SIZE];
@@ -112,7 +122,6 @@ class RunnableInput implements Runnable {
    public final static int BLOCK_SIZE = 131072;
    public final static int DICT_SIZE = 32768;
    private final static int GZIP_MAGIC = 0x8b1f;
-   private final static int TRAILER_SIZE = 8;
 
    public ArrayList<RunnableCompress> threadArr; //Public so SingleThreaded can access
    private CRC32 crc;
@@ -128,9 +137,9 @@ class RunnableInput implements Runnable {
    private byte[] dictBuf = new byte[DICT_SIZE];
 
    public RunnableInput(CRC32 crc, int numThreads) {
-      threadArr = new ArrayList<RunnableCompress>();
       this.crc = crc;
       this.numThreads = numThreads;
+      threadArr = new ArrayList<RunnableCompress>();
       totalBytesRead = 0;
       isFinished = false;
 
@@ -140,10 +149,10 @@ class RunnableInput implements Runnable {
       threadPool = Executors.newFixedThreadPool(numThreads);  
    }
 
+   //Getter methods
    public int getTotalBytesRead() {
       return totalBytesRead;
    }
-
    public boolean getFinished() {
       return isFinished;
    }
@@ -152,9 +161,6 @@ class RunnableInput implements Runnable {
    public void run() {
       this.crc.reset();
 
-      boolean hasDict = false;
-      boolean lastBlock = false;
-      
       /* reads next BLOCK_SIZE # of bytes into blockBuf, rets # of bytes read or -1 if end reached */
       int currentBytesRead = 0;
       try {
@@ -164,9 +170,10 @@ class RunnableInput implements Runnable {
          System.exit(1);
       }
 
+      boolean hasDict = false;
+      boolean lastBlock = false;
        /* Loop + read in data until end of stream reached */
       while (currentBytesRead > 0) {
-         totalBytesRead += currentBytesRead;
          /* Update the CRC checksum every time we read in a new block. */
          crc.update(blockBuf, 0, currentBytesRead);
      
@@ -174,11 +181,10 @@ class RunnableInput implements Runnable {
          if (currentBytesRead < BLOCK_SIZE) {
             lastBlock = true;
          }
- 
          //Create new compress task, exec + add to arraylist to keep track, + add to threadpool to exec
          RunnableCompress newCompress = new RunnableCompress(currentBytesRead, blockBuf, dictBuf, hasDict, lastBlock);
-         threadArr.add(newCompress);
          threadPool.execute(newCompress);
+         threadArr.add(newCompress);
 
          /* If we read in enough bytes in this block, store the last part as the dictionary for the
          next iteration */ 
@@ -189,6 +195,7 @@ class RunnableInput implements Runnable {
             hasDict = false;
          }
          
+         totalBytesRead += currentBytesRead; //Add # bytes to counter before next read
          try {
             currentBytesRead = inputReader.read(blockBuf, 0, BLOCK_SIZE);
          } catch (IOException e) {
@@ -207,13 +214,14 @@ class RunnableInput implements Runnable {
 class RunnableCompress implements Runnable {
    public final static int BLOCK_SIZE = 131072;
    public final static int DICT_SIZE = 32768;
-   private int currentBytes; //Actual # of bytes
+   //# of bytes in + out
+   private int currentBytes;
    private int deflatedBytes;
 
    /* Buffers to store dict + input, init to empty max size */
    private byte[] blockBuf = new byte[BLOCK_SIZE];
    private byte[] dictBuf = new byte[DICT_SIZE];
-   public byte[] cmpBlockBuf = new byte[BLOCK_SIZE*2]; //So SingleThreaded can access
+   public byte[] cmpBlockBuf = new byte[BLOCK_SIZE*2]; //public so SingleThreaded can access
 
    private boolean hasDict;
    private boolean lastBlock;
