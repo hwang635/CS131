@@ -149,6 +149,9 @@ than the finite domain solver, more than twice as slow. The memory usage is
 about the same, but the plain solver is significantly slower than the finite
 domain solver for all testcases.
 
+Trial time finite domain solver: 2000 ms
+Trial time plain solver: 7899 ms
+
 FINITE DOMAIN SOLVER: 
 Memory               limit         in use            free
    trail  stack      16383 Kb            0 Kb        16383 Kb
@@ -176,4 +179,51 @@ Times              since start      since last
    system time       0.012 sec       0.003 sec
    cpu    time       0.027 sec       0.006 sec
    real   time     150.123 sec      86.260 sec
+*/
+
+/* No op Kenken
+
+API: no_op_kenken(N, T, Cages, Ops)
+N and T are the same as for regular kenken, the size of the grid and the
+list of ints representing the numbers in the grid. Cages would be like C
+but without the operation constraints, just the list of cage constraints
+for how to organise the numbers in T. Ops would be the list of cage
+constraint operation per each cage solutions found by the no_op_kenken rule.
+If the function successfully found valid cage constraint operations, Ops would
+be bound to the solution(s) after the rule returns. Otherwise, it would remain
+empty and the rule returns "no"; none of the other terms change.
+
+A naive, inefficient solution is to guess all possible operations. We know
+that there are only 4 operations and some of the operations can only be
+performed on certain types of cages. To solve the no op cage, we go through
+each cage and try all possible combinations of operations until there's
+a valid combination. We know that if a constraint in Cages has form (A, B, C)
+then it can only be subtraction or division; if it has form (A, B)
+then it must be addition or multiplication. In this way, for each cage
+possibility there are only 2 guesses we can make for what the constraint is.
+We proceed through the cages in a DFS way, trying each possible complete
+solution, binding the possible solution to Ops, and continuing until all
+options are exhausted. We check validity the same way as for regular kenken,
+by checking length, unique numbers 1-N, and transposing to check for rows
+and column correctness. This way is very inefficient since we are trying all
+possible cage combinations, but should eventually find all solutions.
+
+In this testcase, adapted from the given testcase, no operations are given
+and they are replaced by placeholder ? for the function to go through and
+find solutions for. Calling the testcase will perform the work described
+above so that T is set to valid values and Ops is bound to +, /, *, *, -,
+, *, *, *, +, *, *, +, +, / in order of the solved operations per each cage.
+noop_kenken_testcase(
+	6,
+	T,
+	[
+		?(6, [[1|1], [1|2], [2|1]]),
+		?(96, [[1|3], [1|4], [2|2], [2|3], [2|4]]),
+		?(1, [3|1], [3|2]),
+		?(1, [4|1], [4|2]),
+		?(8, [[3|3], [4|3], [4|4]]),
+		?(2, [[3|4]])
+	],
+  	Ops
+).
 */
