@@ -145,7 +145,7 @@ kenken(
 ), write(T), nl, fail. 
 
 As the stastistic data below shows, the plain solver is significantly slower
-than the finite domain solver, more than twice as slow. The memory usage is
+than the finite domain solver, always more than twice as slow. The memory usage is
 about the same, but the plain solver is significantly slower than the finite
 domain solver for all testcases.
 
