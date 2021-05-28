@@ -1,5 +1,8 @@
 #lang racket
 (provide expr-compare)
+(provide test-expr-compare)
+(provide test-expr-x)
+(provide test-expr-y)
 
 ; from TA hint code, to check if element is lambda or lambda symbol
 (define (lambda? x)
@@ -7,22 +10,31 @@
 
 ; defines exclusive xor, https://stackoverflow.com/questions/1930901/exclusive-or-in-scheme
 (define (xor a b)
-  (and 
-   (not (and a b))
-   (or a b)))
+  (and (not (and a b)) (or a b)))
 
 ; combines xSymb!ySymb
 (define (combineSymbols xSymb ySymb)
-    (string-append (symbol->string xSymb) "!" (symbol->string ySymb))
-)
+    (string-append (symbol->string xSymb) "!" (symbol->string ySymb)))
 
-; from TA hint code, check if equal then check list cases
+; checks if both xElem + yElem are booleans
+(define (bothBool xElem yElem)
+    (and (boolean? xElem) (boolean? yElem)))
+
+; checks if xElem is if or quote
+(define (isConstant xElem)
+    (or (equal? xElem 'quote) (equal? xElem 'if)))
+
+; helper fx for % output
+(define (percentOp x)
+    (if x '% '(not %)))
+
+; based off TA hint code, check if equal then check list cases
 (define (expr-compare x y)
     (cond 
         [(equal? x y) ; base case, x + y are the same
             x]
-        [(and (boolean? x) (boolean? y)) ; x + y are bools, do % op
-            (if x '% '(not %))]
+        [(bothBool x y) ; x + y are bools, do % op
+            (percentOp x)]
         ; if x or y isn't list, means not fx
         [(or (not (list? x)) (not (list? y)))
             (list 'if '% x y)]
@@ -62,8 +74,8 @@
         [(equal? (car x) (car y))
             (cons (car x) (compareRegularList (cdr x) (cdr y)))]
         ; non-identical bool elems
-        [(and (boolean? (car x)) (boolean? (car y)))
-            (cons (if (car x) '% '(not %)) (compareRegularList (cdr x) (cdr y)))]
+        [(bothBool (car x) (car y))
+            (cons (percentOp (car x)) (compareRegularList (cdr x) (cdr y)))]
         ; check if elems are lists
         [(and (list? (car x)) (list? (car y)))
             (cond
@@ -77,6 +89,16 @@
         [else (cons (list 'if '% (car x) (car y)) (compareRegularList (cdr x) (cdr y)))]
     ))     
 
+; starts lambda expr procession, init x + y maps
+(define (handleLambdaStart lambdaType x y)
+    (list lambdaType (handleLambdaArgs (cadr x) (cadr y))
+        (parseLambdaExpr lambdaType  
+            ; start list/map for x + y
+            (caddr x) (cons (createXMap #t (cadr x) (cadr y)) '()) 
+            (caddr y) (cons (createYMap #t (cadr x) (cadr y)) '())
+        ))
+    )
+
 ; checks lambda start cases when handling lists w/ same length
 (define (compareSameLenLambdas x y)
     (cond
@@ -88,19 +110,10 @@
             (list 'if '% x y)]
         ; if diff # of symbols, check if both lambda OR 1 lambda + 1 lam symbol or 2 lam symbols
         [(and (equal? (car x) 'lambda) (equal? (car y) 'lambda))
-            (handleLambdaStart 'lambda (cdr x) (cdr y))]
-        [else (handleLambdaStart 'λ (cdr x) (cdr y))]
+            (handleLambdaStart 'lambda x  y)]
+        [else (handleLambdaStart 'λ  x  y)]
     )
 )
-
-; starts lambda expr procession, init x + y maps
-(define (handleLambdaStart lambdaType x y)
-    (list lambdaType (handleLambdaArgs (car x) (car y))
-        (process-lambda-fun (cadr x) (cadr y) 
-            ; start list/map for x + y
-            (cons (build-dictx (car x) (car y)) '())
-            (cons (build-dicty (car x) (car y)) '())))
-    )
 
 ; goes through args passed to lambda fxs + checks equality
 (define (handleLambdaArgs x y)
@@ -117,137 +130,260 @@
             (cons (car x) (handleLambdaArgs (cdr x) (cdr y)))]
     ))
 
-; first function call for two lambda expression with same # of parameters
-(define (process-lambda x y lambda dictx-list dicty-list)
-  (list lambda (handleLambdaArgs (car x) (car y)) ; append correct lambda and output correctly combined arguments
-        (process-lambda-fun (car (cdr x)) ; expr part of lambda expressions
-                            (car (cdr y))
-                            (cons (build-dictx (car x) (car y)) dictx-list) ; build list of dictionaries
-                            (cons (build-dicty (car x) (car y)) dicty-list))))   
- 
-; processes 'expr' part of lambda expression
-(define (process-lambda-fun x y dictx-list dicty-list)
-  ; we first get the most recent name for each element if there exists a new name
-  (let ([x-curr (if (equal? (get-latest-name x dictx-list) "Not Found1") x (get-latest-name x dictx-list))]
-        [y-curr (if (equal? (get-latest-name y dicty-list) "Not Found1") y (get-latest-name y dicty-list))])
-  (cond
-    ; if both are lists of same lengths, needs to check this first 
-    [(and (list? x) (list? y) (equal? (length x) (length y))) (process-lambda-fun-list-start x y dictx-list dicty-list)]
-    ; if curr elements r equal
-    [(equal? x-curr y-curr) x-curr]
-    ; if are boolean
-    [(and (boolean? x) (boolean? y)) (if x '% '(not %))]
-    ; if one of them is not list
-    [(or (not (list? x)) (not (list? y)))
-     ; need to call replace-all to update all variable names before returning output if element is a list
-     (list 'if '% (if (list? x) (replace-all x dictx-list #t) x-curr) (if (list? y) (replace-all y dicty-list #t) y-curr))]
-    ; if both are list, but are lists of different length
-    [(and (list? x) (list? y) (not (equal? (length x) (length y)))) (list 'if '% (replace-all x dictx-list #t) (replace-all y dicty-list #t))]
+(define (parseLambda  lambdaType x y xMap yMap)
+    (list lambdaType (handleLambdaArgs (cadr x) (cadr y))
+        (parseLambdaExpr lambdaType 
+            (caddr x) (cons (createXMap #f (cadr x) (cadr y)) xMap) 
+            (caddr y) (cons (createYMap #f (cadr x) (cadr y)) yMap)
+            ))
+    )
+
+(define (parseLambdaExpr lambdaType x xMap y yMap)
+    (cond
+        ; base case, x + y are the same elem
+        [(equal? (findVar x xMap) (findVar y yMap))
+            (findVar x xMap)]
+        ; simple case, x + y are both bools
+        [(bothBool x y) (percentOp x)]
+        ; both x + y are lists
+        [(and (list? x) (list? y))
+            (if (= (length x) (length y))
+                (parseListExpr x xMap y yMap) ; same length, call fx to parse
+                (list 'if '% (renameList x xMap) (renameList y yMap))) ; diff length, rename vars + add
+        ]
+        ; either x or y is a list
+        [else 
+            (list 'if '%
+                (if (list? x) (renameList x xMap) (findVar x xMap))
+                (if (list? y) (renameList y xMap) (findVar y yMap)))]
+    ))
+
+; helper fx for parsing lambda expr for lambda cases
+(define (lambdaHelper x xMap xRenamed y yMap yRenamed)
+    (cond
+        ; x OR y starts w/ lambda
+        [(xor (lambda? (car x)) (lambda? (car y)))
+            (list 'if '% xRenamed yRenamed)]
+        ; otherwise, check if lists have diff length
+        [(not (= (length (cadr x)) (length (cadr y))))
+            (list 'if '% xRenamed yRenamed)]
+        ; lists have same length, check if both start w/ lambda
+        [(and (equal? (car x) 'lambda) (equal? (car y) 'lambda))
+            (parseLambda 'lambda x y xMap yMap)]
+        ; otherwise, both start w/ lambda symbol or diff lambdas
+        [else 
+            (parseLambda 'λ x y xMap yMap)]
+    ))
+
+(define (lambdaHelperConstants x xMap xRenamed y yMap yRenamed)
+    (cond
+        ; x + y are both quotes
+        [(and (equal? (car x) 'quote) (equal? (car y) 'quote)) ('quote)]
+        ; x OR y are quotes
+        [(xor (equal? (car x) 'quote) (equal? (car y) 'quote)) (list 'if '% xRenamed yRenamed)]
+        ; x OR y are  if
+        [(xor (equal? (car x) 'if) (equal? (car y) 'if)) (list 'if '% xRenamed yRenamed)]
+        ; x + y are if
+        [(and (equal? (car x) 'if) (equal? (car y) 'if)) 
+            (cons 'if (parseLambdaList (cdr x) xMap (cdr y) yMap))]
+    )
+)
+
+(define (parseListExpr x xMap y yMap)
+    (let ((xRenamed (renameList x xMap)) (yRenamed (renameList y yMap)))
+        (cond
+            ; check if x or y starts w/ lambda or lambda symbol
+            [(or (lambda? (car x)) (lambda? (car y)))
+                (lambdaHelper x xMap xRenamed y yMap yRenamed)]
+            ; check if x or y starts w/ constant (if or quote)
+            [(or (isConstant (car x)) (isConstant (car y)))
+                (lambdaHelperConstants x xMap xRenamed y yMap yRenamed)]
+            ; otherwise, call helper fx to check list
+            [else (parseLambdaList x xMap y yMap)]
+        )
+    )
+)
+
+; checks switch cases, separated for debugging
+(define (listHelper2 x xMap xRenamed y yMap yRenamed)
+    (let ((firstElem '()))
+        (cond
+            ; check if x + y are lists
+            [(and (list? (findVar (car x) xMap)) (list? (findVar (car y) yMap)))
+                (if (= (length (car x)) (length (car y)))
+                    (set! firstElem (parseListExpr (car x) xMap (car y) yMap))
+                    (set! firstElem (list 'if '% xRenamed yRenamed)))
+                (cons firstElem (parseLambdaList (cdr x) xMap (cdr y) yMap))
+            ]
+            [else 
+                (cond
+                    ; check if starting elem = same for x + y
+                    [(and (equal? (car x) 'quote) (equal? (car y) 'quote)) 
+                        (set! firstElem (percentOp (car x)))]
+                    [(bothBool (car x) (car y)) 
+                        (set! firstElem (percentOp (car x)))]
+                    [(equal? (findVar (car x) xMap) (findVar (car y) yMap)) 
+                        (set! firstElem (findVar (car x) xMap))]
+                    [else 
+                        (set! firstElem (list 'if '% (findVar (car x) xMap) (findVar (car y) yMap)))]
+                )
+                (cons firstElem (parseLambdaList (cdr x) xMap (cdr y) yMap))
+            ]
+        )
+    ))
+
+; recursively goes through elems in lambda lists
+(define (parseLambdaList x xMap y yMap)
+    (let ((xRenamed (renameList x xMap)) (yRenamed (renameList y yMap)))
+        (cond
+            ; base case, empty lists = done parsing
+            [(and (zero? (length x)) (zero? (length y))) '()]
+            ; either x OR y is list
+            [(xor (list? (findVar (car x) xMap)) (list? (findVar (car y) yMap)))
+                (list 'if '%
+                    (if (list? x) xRenamed (findVar (car x) xMap))
+                    (if (list? y) xRenamed (findVar (car y) yMap))
+            )]
+            ; check switch cases
+            [else (listHelper2 x xMap xRenamed y yMap yRenamed)]
     )))
 
-; starting point for 'expr' part of lambda expression that are *lists* of the same length
-(define (process-lambda-fun-list-start x y dictx dicty)
-  (cond
-    ; want to first check if both of them are 'if's, append if first and deal with rest of list
-    [(and (equal? (car x) 'if) (equal? (car x) (car y))) (cons 'if (expr-comp-list-lambda (cdr x) (cdr y) dictx dicty))]
-    ; check if only one of them are 'if'
-    [(or (equal? (car x) 'if) (equal? (car y) 'if)) (list 'if '% (replace-all x dictx #t) (replace-all y dicty #t))]
-    ; check if either of them are quotes...
-    [(or (equal? (car x) 'quote) (equal? (car y) 'quote))
-     (if (equal? x y) x (list 'if '% (replace-all x dictx #t) (replace-all y dicty #t)))]
-    ; check for beginning with 'lambda'
-    [(and (equal? (car x) 'lambda) (equal? (car x) (car y)))
-     (cond
-       [(not (equal? (length (car (cdr x))) (length (car (cdr y))))) (list 'if '% (replace-all x dictx #t) (replace-all y dicty #t))]
-       [else (process-lambda (cdr x) (cdr y) 'lambda dictx dicty)])]
-    ; check for beginning with lambda symbol
-    [(and (equal? (car x) 'λ) (equal? (car x) (car y)))
-     (cond
-       [(not (equal? (length (car (cdr x))) (length (car (cdr y))))) (list 'if '% (replace-all x dictx #t) (replace-all y dicty #t))]
-       [else (process-lambda (cdr x) (cdr y) 'λ dictx dicty)])]
-    ; check for beginning with different lambda symbols
-    [(and (lambda? (car x)) (lambda? (car y)))
-     (cond
-       [(not (equal? (length (car (cdr x))) (length (car (cdr y))))) (list 'if '% (replace-all x dictx #t) (replace-all y dicty #t))]
-       [else (process-lambda (cdr x) (cdr y) 'λ dictx dicty)])]
-    ; only one begin with lambda
-    [(or (lambda? (car x)) (lambda? (car y))) (list 'if '% (replace-all x dictx #t) (replace-all y dicty #t))]
-    ; all other cases...
-    [else (expr-comp-list-lambda x y dictx dicty)]
+; based off stackoverflow answers
+; https://stackoverflow.com/questions/62952288/scheme-procedure-to-replace-elements-in-a-list
+; https://stackoverflow.com/questions/4542386/searching-and-replacing-n-element-on-list-scheme
+; startSymbol (lambda or NA), x, + map ==> renames vars found in map
+(define (renameList x xMap)
+    (let ((currentElem (if (not (zero? (length x))) (car x) '())))
+    (cond
+        ; base case, done when empty
+        [(zero? (length x)) '()]
+        ; check if constant (if or quote)
+        [(isConstant currentElem)
+            (if (equal? currentElem 'quote)
+                x ; quote, do nothing
+                (cons currentElem (renameList (cdr x) xMap))); if, recurse
+        ]
+        ; check if bool
+        [(boolean? currentElem)
+            (cons currentElem (renameList (cdr x) xMap))]
+        ; check if starts w/ lambda
+        [(lambda? currentElem)
+            (cons currentElem
+            (list (cadr x) (renameList (cddr x) (cons (createXMap #f (cadr x) (cadr x)) xMap))))]
+        ; check for list
+        [(list? currentElem)
+            (cons (renameList currentElem xMap) (renameList (cdr x) xMap))]
+        ; otherwise, checks map for var name
+        [else
+        (cons
+           (findVar currentElem xMap) 
+           (renameList (cdr x) xMap))]
+    )))
+
+; gets name from map if it exists
+(define (findVar x xMap)
+    (let ((foundVar (findVarHelper x xMap)))
+    (if foundVar foundVar x ))
+)
+
+; helper fx for findVar, checks map for most recent var
+; https://docs.racket-lang.org/reference/hashtables.html#%28def._%28%28quote._~23~25kernel%29._hash-ref%29%29
+(define (findVarHelper x xMap)
+    (cond
+        [(zero? (length xMap)) #f]
+        [(equal? (hash-ref (car xMap) x #f) #f)
+            (findVarHelper x (cdr xMap))]
+        [else 
+             (hash-ref (car xMap) x #f)]
+))
+
+; rec creates map for x elems
+; stack overflow inspiration
+; https://stackoverflow.com/questions/56589496/lisp-accessing-recursive-hashes-with-syntactic-sugar
+;https://stackoverflow.com/questions/1099509/how-can-i-reuse-a-gethash-lookup-in-common-lisp
+;https://stackoverflow.com/questions/52349884/create-a-nested-dictionary-using-recursion-python
+(define (createXMap isStart x y)
+    ; currentElem = 1st elem in x if nonempty, () if x is empty
+    (let ((currentElem (if (not (zero? (length x))) (car x) '())))
+    (cond 
+        ; bool start, start hash table
+        ;[(equal? isStart #t) (hash)]
+        ; empty, start hash table
+        [(and (zero? (length x)) (zero? (length y))) (hash)]
+        ; same current elem, map elem to itself
+        [(equal? currentElem (car y))
+            (hash-set (createXMap #f (cdr x) (cdr y)) currentElem currentElem)]
+        ; otherwise, map elem to combined elem
+        [else
+            (hash-set (createXMap #f (cdr x) (cdr y)) currentElem
+            (string->symbol (combineSymbols currentElem (car y))))]
+    ))
+)
+
+; rec creates map for y elems
+(define (createYMap isStart x y)
+    ; currentElem = 1st elem in x if nonempty, () if x is empty
+    (let ((currentElem (if (not (zero? (length y))) (car y) '())))
+    (cond 
+        ; bool start, start hash table
+        ;[(equal? isStart #t) (hash)]
+        ; empty, start hash table
+        [(and (zero? (length x)) (zero? (length y))) (hash)]
+        ; same current elem
+        [(equal? (car x) currentElem)
+            (hash-set (createXMap #f (cdr x) (cdr y)) currentElem currentElem)]
+        ; otherwise, combine elems
+        [else
+            (hash-set (createXMap #f (cdr x) (cdr y)) currentElem
+            (string->symbol (combineSymbols (car x) currentElem)))]
+    ))
+)
+
+; #2, from TA hint code
+; compare and see if the (expr-compare x y) result is the same with x when % = #t
+; and the same with y when % = #f
+(define (test-expr-compare x y) 
+  (and (equal? (eval x)
+               (eval `(let ((% #t)),(expr-compare x y))))
+       (equal? (eval y)
+               (eval `(let ((% #f)),(expr-compare x y))))))
+
+;#3
+(define test-expr-x
+    (list
+        (+ 1 3)
+        '(lambda (a b) (* a b))
+        '(if x y z)
+        '(cons "hello" "world")
+        #f
+        '(cons (1 3) (1))
+        '(quote λ (a b c))
+        '(list x y z)
+        (= (+ 1 2) (+ 2 1))
+        "test"
+        "test2"
+        '(1 3 1)
+        #t
     ))
 
-; processes elements in lists within lambda functions one by one
-(define (expr-comp-list-lambda x y dictx dicty)
-  (if (and (empty? x) (empty? y)) '()
-      (let ([x-curr (if (equal? (get-latest-name (car x) dictx) "Not Found1") (car x) (get-latest-name (car x) dictx))]
-            [y-curr (if (equal? (get-latest-name (car y) dicty) "Not Found1") (car y) (get-latest-name (car y) dicty))])
-        (cond
-          ; want to first check if they're both lists
-          [(and (list? x-curr) (list? y-curr))
-           (cond
-             ; if lists are of same length
-             [(equal? (length (car x)) (length (car y))) (cons (process-lambda-fun-list-start (car x) (car y) dictx dicty)
-                                                               (expr-comp-list-lambda (cdr x) (cdr y) dictx dicty))]
-             ; if lists are different length
-             [else (cons (list 'if '% (replace-all (car x) dictx #t) (replace-all (car y) dicty #t)) (expr-comp-list-lambda (cdr x) (cdr y) dictx dicty))]
-             )]
-          ; if curr element are equal
-          [(equal? x-curr y-curr) (cons x-curr (expr-comp-list-lambda (cdr x) (cdr y) dictx dicty))]
-          ; if curr element are bools
-          [(and (boolean? (car x)) (boolean? (car y))) 
-           (cons (if (car x) '% '(not %)) (expr-comp-list-lambda (cdr x) (cdr y) dictx dicty))]
-          ; case when only one element is a list
-          [(or (list? x-curr) (list? y-curr))
-           (list 'if '% (if (list? x) (replace-all x dictx #t) x-curr) (if (list? y) (replace-all y dicty #t) y-curr))]
-          ; all other cases...
-          [else (cons (list 'if '% x-curr y-curr) (expr-comp-list-lambda (cdr x) (cdr y) dictx dicty))])
-        )))
-
-; helper function: given a list x and list of dictionaries, updates all variable names
-; note: head indicates we're at beginning of list in order to not override if/lambda at beginning of list
-(define (replace-all x dictx-list head)
-  (cond
-    [(empty? x) '()]
-    ; if x is a quotes list, we don't want to rename variables
-    [(equal? (car x) 'quote) x]
-    ; check if begin with lambda or lambda symbol
-    [(and head (or (equal? (car x) 'lambda) (equal? (car x) 'λ)))
-     (cons (car x) (cons (car (cdr x)) (replace-all (cdr (cdr x)) (cons (build-dictx (car (cdr x)) (car (cdr x))) dictx-list) #f)))]
-    ; check if begin with 'if' 
-    [(and head (equal? (car x) 'if)) (cons (car x) (replace-all (cdr x) dictx-list #f))]
-    ; check if (car x) is a list
-    [(list? (car x)) (cons (replace-all (car x) dictx-list #t) (replace-all (cdr x) dictx-list #f))]
-    ; case for boolean, don't want to replace
-    [(boolean? (car x)) (cons (car x) (replace-all (cdr x) dictx-list #f))]
-    ; all other cases, we look for latest name in dictionary if there exists one
-    [else (cons
-           (if (equal? (get-latest-name (car x) dictx-list) "Not Found1") (car x) (get-latest-name (car x) dictx-list))
-           (replace-all (cdr x) dictx-list #f))]
+(define test-expr-y
+    (list
+        (* 1 3)
+        '(lambda (a b) (+ a b))
+        '(if x y z)
+        '(cons "hello" (cons "hello" "world"))
+        #f
+        '(cons (1) (3 1))
+        '(quote lambda (a b d))
+        '(list x x z)
+        (equal? (+ 1 2) (* 2 1))
+        "test1"
+        "test2"
+        '(1 3 1)
+        #f
     ))
 
-; helper function: given list of dictionaries in order of new->old, returns the most recent defined name for a variable
-(define (get-latest-name x dict-list)
-  (cond
-    [(empty? dict-list) "Not Found1"]
-    [(not (equal? (hash-ref (car dict-list) x "Not Found1") "Not Found1")) (hash-ref (car dict-list) x "Not Found1")]
-    [else (get-latest-name x (cdr dict-list))]
-    ))
-
-; helper function: builds dictionary for x
-(define (build-dictx x y)
-  (cond [(and (empty? x) (empty? y)) (hash)]
-        [(equal? (car x) (car y)) (hash-set (build-dictx (cdr x) (cdr y)) (car x) (car x))]
-        [else (hash-set (build-dictx (cdr x) (cdr y))
-                        (car x) (string->symbol (string-append (symbol->string (car x)) "!" (symbol->string (car y)))))]
-        ))
-
-; helper function: builds dictionary for y
-(define (build-dicty x y)
-  (cond [(and (empty? x) (empty? y)) (hash)]
-        [(equal? (car x) (car y)) (hash-set (build-dicty (cdr x) (cdr y)) (car y) (car y))]
-        [else (hash-set (build-dicty (cdr x) (cdr y))
-                        (car y) (string->symbol (string-append (symbol->string (car x)) "!" (symbol->string (car y)))))]
-        ))
+(expr-compare test-expr-x test-expr-y)
 
 ; testcases
 (equal? (expr-compare 12 12) '12)
@@ -296,4 +432,11 @@
                                 1
                                 (* n!x ((r!g) (- n!x 1)))))))
                 (if % 10 9)))
-                
+
+(expr-compare ''((λ (a) a) c) ''((lambda (b) b) d))
+(expr-compare '(+ #f ((λ (a b) (f a b)) 1 2))
+              '(+ #t ((lambda (a c) (f a c)) 1 2)))
+(expr-compare '(cons a b) '(list a b))
+(expr-compare '(cons (cons a b) (cons b c))
+              '(cons (cons a c) (cons a c)))
+(expr-compare '(if x y z) '(g x y z))
