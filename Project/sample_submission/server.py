@@ -1,223 +1,303 @@
-import asyncio
 import argparse
-import time
-import sys
 import logging
+import asyncio
+import re
 import aiohttp
 import json
+import time
+import sys
 
-PRINT_FLAG = 0
-LOG_FLAG = 1
-KEY = 'AIzaSyBl_fdx-j35nYr7vE2UWQhntTSNeqfANaU'
-
-# Server name to port # mappings, MUST UPDATE TO THIS YEAR'S SPEC
-namePortDict = {"Hill": 12440, "Jaquez": 12441, "Smith": 12442, "Campbell": 12443, "Singleton": 12444}
-server_neighbors = {
-    "Hill": ["Jaquez", "Smith"],
-    "Jaquez": ["Hill", "Singleton"],
-    "Smith": ["Hill", "Singleton", "Campbell"],
-    "Campbell": ["Smith", "Singleton"],
-    "Singleton": ["Campbell", "Jaquez", "Smith"]
+# Server name to port # mappings, MUST UPDATE TO THIS YEAR'S SPEC AFTER TESTING
+namePortMap = {
+    "Riley": 12440,
+    "Jaquez": 12441,
+    "Juzang": 12442,
+    "Campbell": 12443,
+    "Bernard": 12444
+}
+neighbourServerMap = {
+    "Riley": ["Jaquez", "Juzang"], # Riley talks w/ Js
+    "Bernard": ["Jaquez", "Juzang", "Campbell"], # Bernard talks w/ everyone but Riley
+    "Juzang": ["Campbell", "Riley", "Bernard"], # Juzang talks w/ C
+    "Jaquez": ["Riley", "Bernard"],
+    "Campbell": ["Juzang", "Bernard"]
 }
 
+MY_APIKEY = 'AIzaSyBl_fdx-j35nYr7vE2UWQhntTSNeqfANaU'
+
+# Represents server obj
 class Server:
     def __init__(self, name, port, ip='127.0.0.1', message_max_length=1e6):
-        self.ip = ip
         self.name = name
         self.port = port
+        self.ip = ip
         self.message_max_length = int(message_max_length)
-        self.client_info = dict() # stores timestamp of when last message from client is received
-        self.client_message = dict()
-        logging.info("Initialize log file for server {}".format(name))
 
-
-    async def handle_input(self, reader, writer):
-        while not reader.at_eof():  # only exits when buffer is non-empty
-            data = await reader.readline()
-            message = data.decode()
-            if message == "": # ignore empty messages
-                continue
-            print_log("{} recieved: {}".format(self.name, message))
-            strings = message.split()
-            # check for length of strings first
-            if len(strings) != 4:  # not a regular command
-                # check if its message from other servers
-                if len(strings) == 6 and strings[0] == "AT":
-                    # message propagated from other servers
-                    print_log("Received propagated message...")
-                    sendback_message = None
-                    if strings[3] in self.client_info:
-                        # already received message from same ID before
-                        print_log("Already contain data for client {}".format(strings[3]))
-                        if float(strings[5]) > self.client_info[strings[3]]: 
-                            # update and propagate
-                            print_log("Updating data for client {}... and propagating new data...".format(strings[1]))
-                            self.client_info[strings[3]] = float(strings[5])
-                            self.client_message[strings[3]] = message
-                            await self.propagate_message(message)
-                        else:
-                            # already received and don't propagate
-                            print_log("Received message already... Stop propagation.")
-                            pass
-                    else: 
-                        # have not received message from this ID
-                        print_log("New data for client {}... propagate new data...".format(strings[1]))
-                        self.client_info[strings[3]] = float(strings[5])
-                        self.client_message[strings[3]] = message
-                        await self.propagate_message(message)
-                else: 
-                    # invalid message
-                    sendback_message = "? " + message
-            elif strings[0] == "IAMAT":
-                if self.validIAMAT(strings):
-                    # prepare difference in timestamp
-                    diff = time.time() - float(strings[3])
-                    # appends + in front of non-zero positive numbers
-                    str_diff = ["", "+"][diff > 0] + str(diff)
-                    sendback_message = "AT {} {} {} {} {}".format(self.name, str_diff, strings[1], strings[2], strings[3])
-                    # update client ID and timestamp in client_info
-                    self.client_info[strings[1]] = float(strings[3])
-                    # store current message in client_message
-                    self.client_message[strings[1]] = sendback_message
-                    # propagate sendback_message to other servers
-                    await self.propagate_message(sendback_message)
-                else:
-                    sendback_message = "? " + message
-            elif strings[0] == "WHATSAT":
-                if self.validWHATSAT(strings):
-                    # get location of client
-                    location = self.client_message[strings[1]].split()[4]
-                    radius = strings[2]
-                    bound = strings[3]
-                    places = await self.get_places(location, radius, bound)
-                    sendback_message = "{}\n{}\n\n".format(self.client_message[strings[1]], str(places).rstrip('\n'))
-                else:
-                    sendback_message = "? " + message
-            else:
-                sendback_messgae = "? " + message
-
-            # send proper message back to client
-            if sendback_message != None:
-                print_log("Sending message back to client: {}".format(sendback_message))
-                writer.write(sendback_message.encode())
-                await writer.drain()
-
-        print_log("close the client socket")
-        writer.close()
-
-
-    async def propagate_message(self, message):
-        # send message to every server connected
-        for neighbor in server_neighbors[self.name]:
+        # Maps client by unique key to most recent existence, loc, + message
+        self.recentClient = dict()
+        self.clientToLocation = dict()
+        self.clientToMessage = dict()
+        
+        # Set up log file w/ format NameServer.log open to reading + writing, 
+        logging.basicConfig(filename="{}Server.log".format(self.name), 
+            filemode="w+", format="%(asctime)s %(levelname)s %(message)s", 
+            level=logging.INFO)
+        # First log msg
+        logging.info("Starting log for {}".format(self.name))
+        
+    # Ret true if arg can be converted to #, false otherwise
+    def validNumber(self, arg):
+        try:
+            float(arg)
+        except ValueError:
+            return False
+        return True
+    
+    # Updates maps to keep track of client time, msg, + loc
+    def updateClientMap(self, clientKey, timeNum, msg):
+        self.recentClient[clientKey] = timeNum
+        self.clientToMessage[clientKey] = msg
+        # Parse location from msg
+        words = msg.split()
+        loc = words[4]
+        self.clientToLocation[clientKey] = loc
+        
+    # Checks IAMAT has valid format: # of args, valid loc, valid time
+    def checkIAMAT(self, msg):
+        #print("in valid IAMAT")
+        # Must have 4 args
+        if len(msg) != 4:
+            print("IAMAT error: wrong # of args")
+            return False
+        
+        # Check valid ISO 6709 notation for location
+        #print(msg[2])
+        if msg[2][0] != '+' and msg[2][0] != '-':
+            print("IAMAT error: invalid coordinates")
+            return False
+        loc = re.split("[+-]", msg[2])
+        if len(loc) != 3:
+            print("IAMAT error: wrong # of coordinates")
+            return False
+        if not self.validNumber(loc[1]) or not self.validNumber(loc[2]):
+            print("IAMAT error: invalid coordinates")
+            return False
+        lat = float(loc[1])
+        lon = float(loc[2])
+        if lat > 90 or lon > 180:
+            print("IAMAT error: lat or long out of range")
+            return False
+    
+        # Check valid POSIX time (arg is a number)
+        time = msg[3]
+        if not self.validNumber(time):
+            return False
+        
+        return True # No errors, valid IAMAT msg
+    
+    # Handles IAMAT msg: checks validity + creates msg based on valid or not
+    def handleIAMAT(self, args):
+        #print("handle IAMAT")
+        # If invalid IAMAT msg, immed return w/ ? msg
+        if not self.checkIAMAT(args):
+            #print("invalid IAMAT")
+            newMsg = "? "
+            return [False, newMsg]
+        
+        # Otherwise valid, create msg
+        timeNum = float(args[3])
+        timeDiff = time.time() - timeNum
+        if timeDiff > 0:
+            timeStr = "+" + str(timeDiff)
+        else:
+            timeStr = str(timeDiff)
+        newMsg = "AT {} {} {} {} {}".format(self.name, timeStr, args[1], args[2], args[3])
+        
+        return [True, newMsg]
+    
+    # Checks WHATSAT msg is valid (client exists, radius + info bound w/in range)
+    def checkWHATSAT(self, msg):
+        # Must have 4 args
+        if len(msg) != 4:
+            print("WHATSAT error: wrong # of args")
+            return False
+        
+        # Client must already exist
+        clientKey = msg[1]
+        if clientKey not in self.recentClient:
+            print("WHATSAT error: client does not exist")
+            return False
+        
+        # Radius must be # less than 50 km
+        radius = msg[2]
+        if not self.validNumber(radius) or int(radius) < 0 or int(radius) > 50:
+            print("WHATSAT error: invalid radius")
+            return False
+            
+        # Info bound must be # less than 20 items
+        infoBound = msg[3]
+        if not self.validNumber(infoBound) or int(infoBound) < 0 or int(infoBound) > 20:
+            print("WHATSAT error: invalid info bound")
+            return False
+        
+        return True # No errors, valid WHATSAT
+    
+    # Checks + parses WHATSAT msg
+    def handleWHATSAT(self, msg):
+        # If invalid, immed return w/ ?
+        if not self.checkWHATSAT(msg):
+            newMsg = "? "
+            return [False, newMsg]
+        
+        # Otherwise, parse msg to get radius + info bound
+        rad = msg[2]
+        infoBound = int(msg[3])
+        return [True, rad, infoBound]
+    
+    # Flooding alg to send updates to other servers
+    async def floodOtherServers(self, msg):
+        # Try to send updates to each neighbouring server 
+        for otherServer in neighbourServerMap[self.name]:
             try:
-                reader, writer = await asyncio.open_connection('127.0.0.1', namePortDict[neighbor])
-                print_log("{} send to {}: {}".format(self.name, neighbor, message))
-                writer.write(message.encode())
+                # Get portNum from map + open connection
+                portNum = namePortMap[otherServer]
+                _, writer = await asyncio.open_connection('127.0.0.1', portNum)
+                writer.write(msg.encode())
                 await writer.drain()
-                print_log("Closing connection to {}".format(neighbor))
+                logging.info("{} connected and flooded msg {} to neighbour server {}".format(self.name, msg, otherServer))
+                # Use close + wait_closed together to close stream + socket
                 writer.close()
                 await writer.wait_closed()
+                logging.info("{} closed connection to {}".format(self.name, otherServer))
             except:
-                print_log("Error connecting to server {}".format(neighbor))
-
-
-    async def get_places(self, location, radius, upper_bound):
-        async with aiohttp.ClientSession() as session:
-            # need to construct arguments for api
-            coordinates = self.get_coordinates(location)
-            if coordinates == None:  # should not happen
-                print("False coordinate format")
-                sys.exit()
-            print_log("Attempting to retrieve places at location {}".format(coordinates))
-            url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={}&radius={}&key={}'.format(coordinates, radius, KEY)
-            result = await self.fetch(session, url)
-            result_object = json.loads(result)
-            print_log("Successfully retrieved {} place(s) from API".format(len(result_object["results"])))
-            if len(result_object["results"]) <= int(upper_bound):
-                return result
+                logging.info("Flood error: {} couldn't connect to {}".format(self.name, otherServer))
+                
+    # Async fx to parse input
+    async def handle_echo(self, reader, writer):
+        # Loops inf until reader @ end
+        while True:
+            if reader.at_eof(): # Done, break out of inf loop
+                break;
+        
+            data = await reader.readline()
+            msg = data.decode()
+            # Empty msg, do nothing + skip
+            if len(msg) < 1:
+                continue
+            parsedMsg = msg.split()
+            logging.info("{} received message {}".format(self.name, msg))
+            
+            # Check for IAMAT or WHATSAT msg first, check if valid + process msg
+            if parsedMsg[0] == "IAMAT":
+                # Get array after processing IAMAT msg [valid or not, processed message]
+                processedIAMAT = self.handleIAMAT(parsedMsg)
+                # Invalid, just send ? msg
+                if not processedIAMAT[0]:
+                    newMsg = processedIAMAT[1] + msg
+                #Otherwise valid, send msg to other servers
+                else:
+                    newMsg = processedIAMAT[1]
+                    #Call fx to update client time + msg
+                    self.updateClientMap(parsedMsg[1], float(parsedMsg[3]), newMsg)
+                    await self.floodOtherServers(newMsg)
+            # If starts w/ WHATSAT, check if valid query + process
+            elif parsedMsg[0] == "WHATSAT":
+                # Gets array after processing WHATSAT msg [valid or not, radius, info]
+                processedWHATSAT = self.handleWHATSAT(parsedMsg)
+                # Invalid, just write ? msg
+                if not processedWHATSAT[0]:
+                    newMsg = processedWHATSAT[1] + msg
+                # Valid, process radius + infoBound + loc to query Google API
+                else:
+                    radius = processedWHATSAT[1]
+                    infoBound = processedWHATSAT[2]
+                    # Find loc from client + loc map to query places API
+                    clientKey = parsedMsg[1]
+                    loc = self.clientToLocation[clientKey]
+                    locationResults = await self.queryAPI(loc, radius, infoBound)
+                    # Message, newline, trailing newlines removed, 2 ending newlines
+                    recentMsg = self.clientToMessage[clientKey]
+                    newMsg = "{}\n{}\n\n".format(recentMsg, locationResults)
+            # Check for AT msg from another server
+            elif parsedMsg[0] == "AT":
+                # Must have 6 args to be valid
+                if len(parsedMsg) != 6:
+                    newMsg = "? " + msg
+                else:
+                    logging.info("{} received msg from another server".format(self.name))
+                    newMsg = None
+                    
+                    # Check if new msg/client or already encountered msg/client
+                    clientKey = parsedMsg[3]
+                    newTime = float(parsedMsg[5])
+                    if not clientKey in self.recentClient: # Not in map, new
+                        logging.info("Adding and sending new client {} and msg info".format(parsedMsg[1]))
+                        self.updateClientMap(clientKey, newTime, msg)
+                        await self.floodOtherServers(msg)
+                    # Already encountered but more recent, update info    
+                    elif newTime > self.recentClient[clientKey]:
+                        logging.info("Update and send client {} exiting info".format(parsedMsg[1]))
+                        self.updateClientMap(clientKey, newTime, msg)
+                        await self.floodOtherServers(msg)
+                    # Already encountered and not recent
+                    else:
+                        logging.info("Already encountered and less recent, do nothing")
             else:
-                # need to filter out extra results from result object
-                result_object["results"] = result_object["results"][0:int(upper_bound)]
-                return json.dumps(result_object, sort_keys=True, indent=4)
-             
-
-    async def fetch(self, session, url):
-        async with session.get(url) as response:
+                newMsg = "? " + msg
+                    
+            #Prevent NoneType errors
+            if newMsg is None:
+                continue
+            # Otherwise, can log + write
+            logging.info("{} sent {} to client".format(self.name, newMsg.rstrip('\n')))
+            writer.write(newMsg.encode())
+            await writer.drain()
+            
+        logging.info("Close the client socket")
+        writer.close()
+            
+    async def fetch (self, sess, url):
+        async with sess.get(url) as response:
             return await response.text()
-
-
-    # need to add comma before second -, +
-    def get_coordinates(self, location):
-        plus = location.rfind('+')
-        minus = location.rfind('-')
-        if plus != -1 and plus != 0:
-            return "{},{}".format(location[0:plus], location[plus:])
-        if minus != -1 and minus != 0:
-            return "{},{}".format(location[0:minus], location[minus:])
-        return None
-
-
-    def validIAMAT(self, strings):
-        # check 3rd argument valid ISO 6709 notation
-        temp = strings[2].replace('+', '-')
-        nums = list(filter(None, temp.split('-')))
-        if len(nums) != 2 or not (is_number(nums[0]) and is_number(nums[1])):
-            return False
-        # check 4th argument float
-        if not is_number(strings[3]):
-            return False
-        return True
-    
-    
-    def validWHATSAT(self, strings):
-        # check third and fourth argument valid numbers
-        if not (is_number(strings[2]) and is_number(strings[3])):
-            return False
-        # check radius within 50 
-        if int(strings[2]) > 50 or int(strings[2]) < 0:
-            return False
-        # check information bound at most 20 items
-        if int(strings[3]) > 20 or int(strings[3]) < 0:
-            return False
-        # check if current client exists
-        if strings[1] not in self.client_info:
-            return False
-        return True
-
-
+            
+    # Async fx to query Google API for loc info
+    async def queryAPI(self, loc, radius, infoBound):
+        # https://docs.aiohttp.org/en/stable/client_quickstart.html
+        async with aiohttp.ClientSession() as sess:
+            # Get lat/long coord format, find index of + or - separator where the comma should go
+            sep = loc.rfind("+")
+            if sep == -1 or sep == 0:
+                sep = loc.rfind("-")
+            # Put loc in format lat,long
+            commaLoc = loc[0:sep] + "," + loc[sep:]
+            
+            # Query API, https://stackoverflow.com/questions/2660201/what-parameters-should-i-use-in-a-google-maps-url-to-go-to-a-lat-lon
+            url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={}&radius={}&key={}".format(commaLoc, radius, MY_APIKEY)
+            queryResp = await self.fetch(sess, url)
+            parsedResp = json.loads(queryResp)
+            
+            # Limit # of results to info bound, strip trailing newlines
+            if len(parsedResp["results"]) > infoBound:
+                parsedResp["results"] = parsedResp["results"][:infoBound]
+            logging.info("{} queried {} locations from Google Place API".format(self.name, len(parsedResp["results"])))
+            return json.dumps(parsedResp, indent=4).rstrip('\n')
+        
     async def run_forever(self):
-        print_log('starting up {} server...'.format(self.name))
-        # start up server
-        server = await asyncio.start_server(self.handle_input, self.ip, self.port)
+        # Start server
+        server = await asyncio.start_server(self.handle_echo, self.ip, self.port)
 
         # Serve requests until Ctrl+C is pressed
         async with server:
             await server.serve_forever()
-        
-        print_log('{} server shutting down...'.format(self.name))
         # Close the server
+        logging.info("Done, closing {}".format(self.name))
         server.close()
-
-
-def is_number(string):
-    try:
-        float(string)
-        return True
-    except ValueError:
-        return False
-
-
-def print_log(msg):
-    if LOG_FLAG:
-        logging.info(msg)
-    if PRINT_FLAG:
-        print(msg)
-
+        
 # Based off TA hint code echo_server.py, parse cmd line + init Server obj
 def main():
     # Check cmd line has correct # of args before parsing
     if len(sys.argv) != 2:
-        print("Error: wrong # of arguments")
+        print("Parsing error: wrong # of arguments")
         sys.exit(1)
 
     # Create arg parser + parse cmd line args
@@ -227,21 +307,18 @@ def main():
     
     #Check that passed in server name exists, if valid then start server
     serverName = args.server_name
-    if not serverName in namePortDict:
-        print("Error: server name does not exist")
+    if not serverName in namePortMap:
+        print("Parsing error: server name does not exist")
         sys.exit(1)
-    portNum = namePortDict[serverName]
-    server = Server(serverName, portNum)
     
-    #Set up log file w/ format NameServer.log open to reading + writing, 
-    logging.basicConfig(filename="{}Server.log".format(serverName), 
-        filemode="w+", format="%(asctime)s %(levelname)s %(message)s", 
-        level=logging.INFO)
+    #Init server obj
+    portNum = namePortMap[serverName]
+    server = Server(serverName, portNum)
 
     try:
         asyncio.run(server.run_forever())
     except KeyboardInterrupt:
         pass
-
+    
 if __name__ == '__main__':
     main()

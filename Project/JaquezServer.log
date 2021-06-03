@@ -1,0 +1,393 @@
+2021-06-03 15:28:05,085 INFO Starting log for Jaquez
+2021-06-03 15:28:10,821 INFO Jaquez received message AT Riley +0.0016217231750488281 client_2 +34.06893-118.445127 1622759290.818255
+2021-06-03 15:28:10,821 INFO Jaquez received msg from another server
+2021-06-03 15:28:10,821 INFO Adding and sending new client Riley and msg info
+2021-06-03 15:28:10,822 INFO Jaquez connected and flooded msg AT Riley +0.0016217231750488281 client_2 +34.06893-118.445127 1622759290.818255 to neighbour server Riley
+2021-06-03 15:28:10,823 INFO Jaquez closed connection to Riley
+2021-06-03 15:28:10,823 INFO Jaquez connected and flooded msg AT Riley +0.0016217231750488281 client_2 +34.06893-118.445127 1622759290.818255 to neighbour server Bernard
+2021-06-03 15:28:10,824 INFO Jaquez closed connection to Bernard
+2021-06-03 15:28:10,824 INFO Close the client socket
+2021-06-03 15:28:10,826 INFO Jaquez received message AT Riley +0.0016217231750488281 client_2 +34.06893-118.445127 1622759290.818255
+2021-06-03 15:28:10,826 INFO Jaquez received msg from another server
+2021-06-03 15:28:10,827 INFO Already encountered and less recent, do nothing
+2021-06-03 15:28:10,827 INFO Close the client socket
+2021-06-03 15:28:10,915 INFO Jaquez received message WHATSAT client_2 10 5
+
+2021-06-03 15:28:11,020 INFO Jaquez queried 3 locations from Google Place API
+2021-06-03 15:28:11,021 INFO Jaquez sent AT Riley +0.0016217231750488281 client_2 +34.06893-118.445127 1622759290.818255
+{
+    "html_attributions": [],
+    "results": [
+        {
+            "geometry": {
+                "location": {
+                    "lat": 34.0690066064988,
+                    "lng": -118.4451028360938
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 34.0703540302915,
+                        "lng": -118.4437560197085
+                    },
+                    "southwest": {
+                        "lat": 34.0676560697085,
+                        "lng": -118.4464539802915
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/geocode-71.png",
+            "name": "Westwood Plaza",
+            "place_id": "ChIJIVpFqYi8woARycmFdi2pQRY",
+            "reference": "ChIJIVpFqYi8woARycmFdi2pQRY",
+            "scope": "GOOGLE",
+            "types": [
+                "route"
+            ],
+            "vicinity": "Los Angeles"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 34.068921,
+                    "lng": -118.4451811
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 34.0828575,
+                        "lng": -118.42990995
+                    },
+                    "southwest": {
+                        "lat": 34.0575047,
+                        "lng": -118.46313815
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/school-71.png",
+            "name": "University of California, Los Angeles",
+            "photos": [
+                {
+                    "height": 3024,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/109886582985269547008\">TIAN XIA</a>"
+                    ],
+                    "photo_reference": "ATtYBwIeXvcIfd7OwvjSnZbNXpcsuPujhcUpo3_PBGBQtw7lBX86zSCWsWoqWGWO7_8UJg1__wW4FxrlqMGHCaVpsKZi7uI68K2WkZHZIoJHI7jxGOEzOEfDtrlIon63NF6jIRSDFU-V1nJtIerZU8ZPWriztDNJrZrWuHJxIlUrcZ2F6Gk_",
+                    "width": 4032
+                }
+            ],
+            "place_id": "ChIJZQ9c8IW8woARN0gTXFiTqSU",
+            "plus_code": {
+                "compound_code": "3H93+HW Los Angeles, CA, USA",
+                "global_code": "85633H93+HW"
+            },
+            "rating": 4.5,
+            "reference": "ChIJZQ9c8IW8woARN0gTXFiTqSU",
+            "scope": "GOOGLE",
+            "types": [
+                "university",
+                "point_of_interest",
+                "establishment"
+            ],
+            "user_ratings_total": 1920,
+            "vicinity": "Los Angeles"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 34.0522342,
+                    "lng": -118.2436849
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 34.33730608759191,
+                        "lng": -118.155289077463
+                    },
+                    "southwest": {
+                        "lat": 33.70365193147634,
+                        "lng": -118.6681759484859
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/geocode-71.png",
+            "name": "Los Angeles",
+            "photos": [
+                {
+                    "height": 427,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/109318379905931372178\">Shoaib Kashmiri</a>"
+                    ],
+                    "photo_reference": "ATtYBwIqvGO-FV7DobMDqBrYk1HAeToM_n_zHD_wEDLK_tmcSGDa54_Qq51C4VnTRNTbcEikkSIASacs6fcbpLqksyKfEBePxbdDiYM6dDmXoCUwUfVJdBa1s4CUq0qu3QlzrRvQkNIggfealhcbRlUKlNLBHsR_tZku20fj85XY-ajQbqvK",
+                    "width": 640
+                }
+            ],
+            "place_id": "ChIJE9on3F3HwoAR9AhGJW_fL-I",
+            "reference": "ChIJE9on3F3HwoAR9AhGJW_fL-I",
+            "scope": "GOOGLE",
+            "types": [
+                "locality",
+                "political"
+            ],
+            "vicinity": "Los Angeles"
+        }
+    ],
+    "status": "OK"
+} to client
+2021-06-03 15:28:11,021 INFO Close the client socket
+2021-06-03 15:28:15,172 INFO Jaquez received message AT Riley +0.0014908313751220703 client_2 +34.06893-118.445127 1622759295.1701458
+2021-06-03 15:28:15,173 INFO Jaquez received msg from another server
+2021-06-03 15:28:15,173 INFO Update and send client Riley exiting info
+2021-06-03 15:28:15,173 INFO Jaquez connected and flooded msg AT Riley +0.0014908313751220703 client_2 +34.06893-118.445127 1622759295.1701458 to neighbour server Riley
+2021-06-03 15:28:15,174 INFO Jaquez closed connection to Riley
+2021-06-03 15:28:15,174 INFO Flood error: Jaquez couldn't connect to Bernard
+2021-06-03 15:28:15,174 INFO Close the client socket
+2021-06-03 15:28:15,267 INFO Jaquez received message WHATSAT client_2 10 5
+
+2021-06-03 15:28:15,352 INFO Jaquez queried 3 locations from Google Place API
+2021-06-03 15:28:15,353 INFO Jaquez sent AT Riley +0.0014908313751220703 client_2 +34.06893-118.445127 1622759295.1701458
+{
+    "html_attributions": [],
+    "results": [
+        {
+            "geometry": {
+                "location": {
+                    "lat": 34.0690066064988,
+                    "lng": -118.4451028360938
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 34.0703540302915,
+                        "lng": -118.4437560197085
+                    },
+                    "southwest": {
+                        "lat": 34.0676560697085,
+                        "lng": -118.4464539802915
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/geocode-71.png",
+            "name": "Westwood Plaza",
+            "place_id": "ChIJIVpFqYi8woARycmFdi2pQRY",
+            "reference": "ChIJIVpFqYi8woARycmFdi2pQRY",
+            "scope": "GOOGLE",
+            "types": [
+                "route"
+            ],
+            "vicinity": "Los Angeles"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 34.068921,
+                    "lng": -118.4451811
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 34.0828575,
+                        "lng": -118.42990995
+                    },
+                    "southwest": {
+                        "lat": 34.0575047,
+                        "lng": -118.46313815
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/school-71.png",
+            "name": "University of California, Los Angeles",
+            "photos": [
+                {
+                    "height": 3024,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/109886582985269547008\">TIAN XIA</a>"
+                    ],
+                    "photo_reference": "ATtYBwJ3eIJ16gu4A9gZ2KwEq8HI7MhpNAXFvh8TkTergSxn_29dsBiSkIYI1Rb6kEmht7j0r4Q-vnslFULUQ0nadIghNfr9816DgPAcxhNvERv8Gs5-gURgOKq_bjKmnggGYr1aQX7buJjCKDuQjGbd1yE9E1PaJ2uIYqqzUDTB0CT9tkrL",
+                    "width": 4032
+                }
+            ],
+            "place_id": "ChIJZQ9c8IW8woARN0gTXFiTqSU",
+            "plus_code": {
+                "compound_code": "3H93+HW Los Angeles, CA, USA",
+                "global_code": "85633H93+HW"
+            },
+            "rating": 4.5,
+            "reference": "ChIJZQ9c8IW8woARN0gTXFiTqSU",
+            "scope": "GOOGLE",
+            "types": [
+                "university",
+                "point_of_interest",
+                "establishment"
+            ],
+            "user_ratings_total": 1920,
+            "vicinity": "Los Angeles"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 34.0522342,
+                    "lng": -118.2436849
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 34.33730608759191,
+                        "lng": -118.155289077463
+                    },
+                    "southwest": {
+                        "lat": 33.70365193147634,
+                        "lng": -118.6681759484859
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/geocode-71.png",
+            "name": "Los Angeles",
+            "photos": [
+                {
+                    "height": 427,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/109318379905931372178\">Shoaib Kashmiri</a>"
+                    ],
+                    "photo_reference": "ATtYBwJwcJHXwdbtIX8xJQw-YY2H1Cco2ccT6icngIurJbNM7B0Y3ykSCQhrXGh-8tEzv84Uy522g5RPbO6a-1BYExYhsfvB4RGHQSx_d43cqMzrzWWDf_7ps9Hgc-9-WGJ-p6kEWA6UXEIbA005ELqtMkrKbQd4K_47Y-Z4b4hRAby8kJ4Y",
+                    "width": 640
+                }
+            ],
+            "place_id": "ChIJE9on3F3HwoAR9AhGJW_fL-I",
+            "reference": "ChIJE9on3F3HwoAR9AhGJW_fL-I",
+            "scope": "GOOGLE",
+            "types": [
+                "locality",
+                "political"
+            ],
+            "vicinity": "Los Angeles"
+        }
+    ],
+    "status": "OK"
+} to client
+2021-06-03 15:28:15,354 INFO Close the client socket
+2021-06-03 15:28:23,451 INFO Jaquez received message AT Riley +0.0013043880462646484 client_3 +34.06893-118.445127 1622759303.4492679
+2021-06-03 15:28:23,452 INFO Jaquez received msg from another server
+2021-06-03 15:28:23,452 INFO Adding and sending new client Riley and msg info
+2021-06-03 15:28:23,453 INFO Jaquez connected and flooded msg AT Riley +0.0013043880462646484 client_3 +34.06893-118.445127 1622759303.4492679 to neighbour server Riley
+2021-06-03 15:28:23,453 INFO Jaquez closed connection to Riley
+2021-06-03 15:28:23,453 INFO Flood error: Jaquez couldn't connect to Bernard
+2021-06-03 15:28:23,453 INFO Close the client socket
+2021-06-03 15:28:23,559 INFO Jaquez received message WHATSAT client_3 10 5
+
+2021-06-03 15:28:23,646 INFO Jaquez queried 3 locations from Google Place API
+2021-06-03 15:28:23,647 INFO Jaquez sent AT Riley +0.0013043880462646484 client_3 +34.06893-118.445127 1622759303.4492679
+{
+    "html_attributions": [],
+    "results": [
+        {
+            "geometry": {
+                "location": {
+                    "lat": 34.0690066064988,
+                    "lng": -118.4451028360938
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 34.0703540302915,
+                        "lng": -118.4437560197085
+                    },
+                    "southwest": {
+                        "lat": 34.0676560697085,
+                        "lng": -118.4464539802915
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/geocode-71.png",
+            "name": "Westwood Plaza",
+            "place_id": "ChIJIVpFqYi8woARycmFdi2pQRY",
+            "reference": "ChIJIVpFqYi8woARycmFdi2pQRY",
+            "scope": "GOOGLE",
+            "types": [
+                "route"
+            ],
+            "vicinity": "Los Angeles"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 34.068921,
+                    "lng": -118.4451811
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 34.0828575,
+                        "lng": -118.42990995
+                    },
+                    "southwest": {
+                        "lat": 34.0575047,
+                        "lng": -118.46313815
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/school-71.png",
+            "name": "University of California, Los Angeles",
+            "photos": [
+                {
+                    "height": 3024,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/109886582985269547008\">TIAN XIA</a>"
+                    ],
+                    "photo_reference": "ATtYBwJa_oeHEcp3soJrWc1rBatG87QMxZGQ0dDoubXDGAvu3ecVK3-yjQ-HhZyi5U2ZmQNwtGVXYJEcqd6AModwywSdET9_Kx0waKJIPoM9JUZ7hnf-0VfjXuZZBWvPQMqo9cBn3Dwp7YbRlYkObQnZb8uuirSD5F4pdVW-KmydhTO4OVUG",
+                    "width": 4032
+                }
+            ],
+            "place_id": "ChIJZQ9c8IW8woARN0gTXFiTqSU",
+            "plus_code": {
+                "compound_code": "3H93+HW Los Angeles, CA, USA",
+                "global_code": "85633H93+HW"
+            },
+            "rating": 4.5,
+            "reference": "ChIJZQ9c8IW8woARN0gTXFiTqSU",
+            "scope": "GOOGLE",
+            "types": [
+                "university",
+                "point_of_interest",
+                "establishment"
+            ],
+            "user_ratings_total": 1920,
+            "vicinity": "Los Angeles"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 34.0522342,
+                    "lng": -118.2436849
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 34.33730608759191,
+                        "lng": -118.155289077463
+                    },
+                    "southwest": {
+                        "lat": 33.70365193147634,
+                        "lng": -118.6681759484859
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/geocode-71.png",
+            "name": "Los Angeles",
+            "photos": [
+                {
+                    "height": 427,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/109318379905931372178\">Shoaib Kashmiri</a>"
+                    ],
+                    "photo_reference": "ATtYBwIXtTUwH5-FeFmA0furfaDwLoCpl6P3EQzseHUgnBPC1oNwv03Mjgp9BMT4O72DQl5LV7-CBZ0UAFbwAD4VHsJ1RhGWBdD0McjrqHTIm7nwnloX0oBnX06_PxuIOcnXhoFD3SfZvNlQPw40MKMj6WhurhTjN8WPKjWemhcxeVy5WpJh",
+                    "width": 640
+                }
+            ],
+            "place_id": "ChIJE9on3F3HwoAR9AhGJW_fL-I",
+            "reference": "ChIJE9on3F3HwoAR9AhGJW_fL-I",
+            "scope": "GOOGLE",
+            "types": [
+                "locality",
+                "political"
+            ],
+            "vicinity": "Los Angeles"
+        }
+    ],
+    "status": "OK"
+} to client
+2021-06-03 15:28:23,647 INFO Close the client socket
