@@ -1,16 +1,16 @@
-2021-06-03 15:28:17,729 INFO Starting log for Juzang
-2021-06-03 15:28:23,452 INFO Juzang received message AT Riley +0.0013043880462646484 client_3 +34.06893-118.445127 1622759303.4492679
-2021-06-03 15:28:23,452 INFO Juzang received msg from another server
-2021-06-03 15:28:23,453 INFO Adding and sending new client Riley and msg info
-2021-06-03 15:28:23,453 INFO Flood error: Juzang couldn't connect to Campbell
-2021-06-03 15:28:23,454 INFO Juzang connected and flooded msg AT Riley +0.0013043880462646484 client_3 +34.06893-118.445127 1622759303.4492679 to neighbour server Riley
-2021-06-03 15:28:23,454 INFO Juzang closed connection to Riley
-2021-06-03 15:28:23,454 INFO Flood error: Juzang couldn't connect to Bernard
-2021-06-03 15:28:23,454 INFO Close the client socket
-2021-06-03 15:28:23,649 INFO Juzang received message WHATSAT client_3 10 5
+2021-06-03 15:37:56,696 INFO Starting log for Juzang
+2021-06-03 15:38:02,388 INFO Juzang received message AT Riley +0.0015175342559814453 client_3 +34.06893-118.445127 1622759882.3852417
+2021-06-03 15:38:02,388 INFO Juzang received msg from another server
+2021-06-03 15:38:02,388 INFO Adding and sending new client Riley and msg info
+2021-06-03 15:38:02,389 INFO Flood error: Juzang couldn't connect to Campbell
+2021-06-03 15:38:02,389 INFO Juzang connected and flooded msg AT Riley +0.0015175342559814453 client_3 +34.06893-118.445127 1622759882.3852417 to neighbour server Riley
+2021-06-03 15:38:02,390 INFO Juzang closed connection to Riley
+2021-06-03 15:38:02,390 INFO Flood error: Juzang couldn't connect to Bernard
+2021-06-03 15:38:02,390 INFO Close the client socket
+2021-06-03 15:38:02,581 INFO Juzang received message WHATSAT client_3 10 5
 
-2021-06-03 15:28:23,738 INFO Juzang queried 3 locations from Google Place API
-2021-06-03 15:28:23,739 INFO Juzang sent AT Riley +0.0013043880462646484 client_3 +34.06893-118.445127 1622759303.4492679
+2021-06-03 15:38:02,680 INFO Juzang queried 3 locations from Google Place API
+2021-06-03 15:38:02,681 INFO Juzang sent AT Riley +0.0015175342559814453 client_3 +34.06893-118.445127 1622759882.3852417
 {
     "html_attributions": [],
     "results": [
@@ -67,7 +67,7 @@
                     "html_attributions": [
                         "<a href=\"https://maps.google.com/maps/contrib/109886582985269547008\">TIAN XIA</a>"
                     ],
-                    "photo_reference": "ATtYBwL1KIoZqJWGSYuYpxzQb403wp60l5Hrw3KVsL8YDXJnWjDp4DACDgO2806CzEN9DgWIGFDSBA48WkW8sWfeDq7fDPjsgOaj7NhCa84XzIBkcSHTtCahpzxF5kM977Izlk0e4_3pCivI_f5uLnL_iACm3rc61aGyTEhruUK28pu4mz-s",
+                    "photo_reference": "ATtYBwJGZqsINsrtFpoWvDrIHaxBLsWf3TFfE4MsSCw9rPOaQLasK06AUHrsszfybvB5WUsXhPSLlG37K-x5z0ht1HSpiKcNK_9oB5H2RCgRb4cldVNLmWTKUv257VTnKQfNwNDKhTlFWpPPMje8Obifx7pAZT7uEy05afB4T-f_oiiNMNaK",
                     "width": 4032
                 }
             ],
@@ -112,7 +112,7 @@
                     "html_attributions": [
                         "<a href=\"https://maps.google.com/maps/contrib/109318379905931372178\">Shoaib Kashmiri</a>"
                     ],
-                    "photo_reference": "ATtYBwKpQfqv3UQVPnjflgiS7KRvff9k8u2Ia1r5rV_z-KKbgIfxiTMQeDy2HUzqj2_eV8laegiZluiigBP7bhiivVyoPumcGge0JKaelCCqFUvcws_QOLfWE4z4YLq5Qng0TXiJGvkbbPMR1PURKkypRg8v4p766bi5fQ9Y47zDS2byBgP4",
+                    "photo_reference": "ATtYBwKpVdpqwlEEMGSWvy_GMHYh_-r74x8ai9SuQMkULzSpbO3H3gX5VWmymBNb0rW0rvcs8ZxFtLWgFBOL2xq4gDPxnv7DA68Ab9rMSB4cREXri_xPXBNuTOd6fpypr0vL01q2ixwF2tYxEHmFezjt4_UT09euq569xmm6-RmKLLosWKBe",
                     "width": 640
                 }
             ],
@@ -128,4 +128,4 @@
     ],
     "status": "OK"
 } to client
-2021-06-03 15:28:23,739 INFO Close the client socket
+2021-06-03 15:38:02,681 INFO Close the client socket

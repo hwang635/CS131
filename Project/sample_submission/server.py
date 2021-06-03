@@ -161,7 +161,7 @@ class Server:
             try:
                 # Get portNum from map + open connection
                 portNum = namePortMap[otherServer]
-                _, writer = await asyncio.open_connection('127.0.0.1', portNum)
+                _, writer = await asyncio.open_connection("127.0.0.1", portNum)
                 writer.write(msg.encode())
                 await writer.drain()
                 logging.info("{} connected and flooded msg {} to neighbour server {}".format(self.name, msg, otherServer))

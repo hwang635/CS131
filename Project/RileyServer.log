@@ -1,14 +1,14 @@
-2021-06-03 15:27:48,231 INFO Starting log for Riley
-2021-06-03 15:27:53,980 INFO Riley received message IAMAT client_1 +34.06893-118.445127 1622759273.9796505
+2021-06-03 15:37:27,263 INFO Starting log for Riley
+2021-06-03 15:37:32,846 INFO Riley received message IAMAT client_1 +34.06893-118.445127 1622759852.8452828
 
-2021-06-03 15:27:53,981 INFO Flood error: Riley couldn't connect to Jaquez
-2021-06-03 15:27:53,982 INFO Flood error: Riley couldn't connect to Juzang
-2021-06-03 15:27:53,982 INFO Riley sent AT Riley +0.0016252994537353516 client_1 +34.06893-118.445127 1622759273.9796505 to client
-2021-06-03 15:27:53,982 INFO Close the client socket
-2021-06-03 15:27:53,983 INFO Riley received message WHATSAT client_1 10 5
+2021-06-03 15:37:32,847 INFO Flood error: Riley couldn't connect to Jaquez
+2021-06-03 15:37:32,847 INFO Flood error: Riley couldn't connect to Juzang
+2021-06-03 15:37:32,848 INFO Riley sent AT Riley +0.0017957687377929688 client_1 +34.06893-118.445127 1622759852.8452828 to client
+2021-06-03 15:37:32,848 INFO Close the client socket
+2021-06-03 15:37:32,849 INFO Riley received message WHATSAT client_1 10 5
 
-2021-06-03 15:27:54,065 INFO Riley queried 3 locations from Google Place API
-2021-06-03 15:27:54,066 INFO Riley sent AT Riley +0.0016252994537353516 client_1 +34.06893-118.445127 1622759273.9796505
+2021-06-03 15:37:32,946 INFO Riley queried 3 locations from Google Place API
+2021-06-03 15:37:32,947 INFO Riley sent AT Riley +0.0017957687377929688 client_1 +34.06893-118.445127 1622759852.8452828
 {
     "html_attributions": [],
     "results": [
@@ -65,7 +65,7 @@
                     "html_attributions": [
                         "<a href=\"https://maps.google.com/maps/contrib/109886582985269547008\">TIAN XIA</a>"
                     ],
-                    "photo_reference": "ATtYBwI9KCl1w8UwKzNB2_82yk24I4YAuZSO0hBpoGuNRMrkNPhI94ORSmQ0V_mXVT_a72gYEcVwcSHdgHXfIWHFoEtofIQPGT9iSbxeII5iWKH5r1gSIzAI5vjZg1mbPM0hfHe1LBvX-LKN87YHgIMBRUVixUS5pygAFvHGiuVDEHAp0oD9",
+                    "photo_reference": "ATtYBwKcYtS42VQcJ4OIzmxbE9Ah9Iu6FtQkQMIKxNM70dkelSEitcpEjXUnk3jGMkKSTcTCQFPmT8LhdIqg4sxzgSZzFGxDwSHNsUOYuo0aGF_hFXj6tGF_witcLj8I_DERrznpPDEgUL5dsVunmKEiMbMelWpanonYWvK6sipUwo58t1I1",
                     "width": 4032
                 }
             ],
@@ -110,7 +110,7 @@
                     "html_attributions": [
                         "<a href=\"https://maps.google.com/maps/contrib/109318379905931372178\">Shoaib Kashmiri</a>"
                     ],
-                    "photo_reference": "ATtYBwKEjb5voczAj6vtAQkLKu2baWxzZE8PW4TjeoI0CfR2wYIFS83oA24XQkbiFFS-VYow0QKwzXikPXOkgBZQeu-vpo06FuuMMVUMc3eyn6kwyrmaZlHwGf7FgZi9UqpfHZ8V1pxlizhlHV0hPMPGk-yvZTJwNHcbepOAYiGE_TkBItJN",
+                    "photo_reference": "ATtYBwJLBhQqZgjohwusliKtm8mISxU_iFxrqRmAcPORScef6PXZj7yKOebv-AdqOi6Ag5vKhrvjix_bF2ZDACANIIqvLAsTqz3UVXcUa8j7Rv9Uzqyggnr0GrERu1_Ft-6WJ_KYJyZQDTFRdiCWPuIr6foESmTwLfZ7ArEWgdUz48dSJvHB",
                     "width": 640
                 }
             ],
@@ -126,22 +126,22 @@
     ],
     "status": "OK"
 } to client
-2021-06-03 15:27:54,066 INFO Close the client socket
-2021-06-03 15:27:58,118 INFO Riley received message IAMAT client_1 +34.06893-118.445127 1622759278.117256
+2021-06-03 15:37:32,947 INFO Close the client socket
+2021-06-03 15:37:37,013 INFO Riley received message IAMAT client_1 +34.06893-118.445127 1622759857.0119147
 
-2021-06-03 15:27:58,119 INFO Flood error: Riley couldn't connect to Jaquez
-2021-06-03 15:27:58,119 INFO Riley connected and flooded msg AT Riley +0.001374959945678711 client_1 +34.06893-118.445127 1622759278.117256 to neighbour server Juzang
-2021-06-03 15:27:58,119 INFO Riley closed connection to Juzang
-2021-06-03 15:27:58,119 INFO Riley sent AT Riley +0.001374959945678711 client_1 +34.06893-118.445127 1622759278.117256 to client
-2021-06-03 15:27:58,120 INFO Close the client socket
-2021-06-03 15:27:58,120 INFO Riley received message WHATSAT client_1 10 5
+2021-06-03 15:37:37,014 INFO Flood error: Riley couldn't connect to Jaquez
+2021-06-03 15:37:37,015 INFO Riley connected and flooded msg AT Riley +0.0017590522766113281 client_1 +34.06893-118.445127 1622759857.0119147 to neighbour server Juzang
+2021-06-03 15:37:37,015 INFO Riley closed connection to Juzang
+2021-06-03 15:37:37,015 INFO Riley sent AT Riley +0.0017590522766113281 client_1 +34.06893-118.445127 1622759857.0119147 to client
+2021-06-03 15:37:37,015 INFO Close the client socket
+2021-06-03 15:37:37,017 INFO Riley received message WHATSAT client_1 10 5
 
-2021-06-03 15:27:58,122 INFO Riley received message AT Riley +0.001374959945678711 client_1 +34.06893-118.445127 1622759278.117256
-2021-06-03 15:27:58,122 INFO Riley received msg from another server
-2021-06-03 15:27:58,122 INFO Already encountered and less recent, do nothing
-2021-06-03 15:27:58,122 INFO Close the client socket
-2021-06-03 15:27:58,215 INFO Riley queried 3 locations from Google Place API
-2021-06-03 15:27:58,215 INFO Riley sent AT Riley +0.001374959945678711 client_1 +34.06893-118.445127 1622759278.117256
+2021-06-03 15:37:37,018 INFO Riley received message AT Riley +0.0017590522766113281 client_1 +34.06893-118.445127 1622759857.0119147
+2021-06-03 15:37:37,018 INFO Riley received msg from another server
+2021-06-03 15:37:37,018 INFO Already encountered and less recent, do nothing
+2021-06-03 15:37:37,019 INFO Close the client socket
+2021-06-03 15:37:37,101 INFO Riley queried 3 locations from Google Place API
+2021-06-03 15:37:37,102 INFO Riley sent AT Riley +0.0017590522766113281 client_1 +34.06893-118.445127 1622759857.0119147
 {
     "html_attributions": [],
     "results": [
@@ -198,7 +198,7 @@
                     "html_attributions": [
                         "<a href=\"https://maps.google.com/maps/contrib/109886582985269547008\">TIAN XIA</a>"
                     ],
-                    "photo_reference": "ATtYBwLqoM0PPozbM2lHAO0X3futNuEpVIRG-xmK4Rzg9h0UsZnIacucjoZWpnNikyB_nJ5oiWg2oOldLPl__D-0aZcoh-JV_Tti_wPNKuu6f4ARg-oUWH152Sam7uG966yHP8cmge8tt4utgKLxmXJLgocpoNjr9sDJ3mxw4Ek-04ltXuDc",
+                    "photo_reference": "ATtYBwJPk_vZYmjB8QUEtg4CCrAeQEweTWuNZR2ST9mpzigGc4RGzJPJDj9iodUEVDszOssNur9-VzndlgER-rpE5BUBMdQd2IFY3mkn0SdM7EHq9P2q0u8QZkl5Y4OHMqHRvdNvKccWAmSixdN0uTx_ZJ7pgGcG-91n8CHoAolVDRbyiwX2",
                     "width": 4032
                 }
             ],
@@ -243,7 +243,7 @@
                     "html_attributions": [
                         "<a href=\"https://maps.google.com/maps/contrib/109318379905931372178\">Shoaib Kashmiri</a>"
                     ],
-                    "photo_reference": "ATtYBwKWVhhpYWBJkkFSZjDWRhXN9ZDGZDsnjD44TnWt3MdrWg_A0Obheea28AfFNl3awXIbqgYlBuRc1nmSRNfa4wXEDX0ft0RLfldl57qXpdrbTs0Ggd0MgwCYlsQSjVATzRzn97QwEauQupBRhCqC8WXeqqfKDE0aRDVBotU9uMzZtTQl",
+                    "photo_reference": "ATtYBwKBwsXdlhF8Xs0SV_19V25r-KFXpxnQL3Tbt8KWhisgh1GX9GyvSKuEXKEykRvHLqtTOeEa7eRoXjVoz95I15DttYHxNp9zb-Eq9NxO_yoo_EmlUlr2XT0YL5fJJLYrYsQ-9tiq1hZUdkMDZwlbwohHMEjVUV4sihqASAPKu3A8S_fa",
                     "width": 640
                 }
             ],
@@ -259,22 +259,22 @@
     ],
     "status": "OK"
 } to client
-2021-06-03 15:27:58,215 INFO Close the client socket
-2021-06-03 15:28:02,442 INFO Riley received message IAMAT client_1 +34.06893-118.445127 1622759282.4416578
+2021-06-03 15:37:37,102 INFO Close the client socket
+2021-06-03 15:37:41,350 INFO Riley received message IAMAT client_1 +34.06893-118.445127 1622759861.3492396
 
-2021-06-03 15:28:02,443 INFO Flood error: Riley couldn't connect to Jaquez
-2021-06-03 15:28:02,443 INFO Riley connected and flooded msg AT Riley +0.0013723373413085938 client_1 +34.06893-118.445127 1622759282.4416578 to neighbour server Juzang
-2021-06-03 15:28:02,444 INFO Riley closed connection to Juzang
-2021-06-03 15:28:02,444 INFO Riley sent AT Riley +0.0013723373413085938 client_1 +34.06893-118.445127 1622759282.4416578 to client
-2021-06-03 15:28:02,444 INFO Close the client socket
-2021-06-03 15:28:02,445 INFO Riley received message WHATSAT client_1 10 5
+2021-06-03 15:37:41,351 INFO Flood error: Riley couldn't connect to Jaquez
+2021-06-03 15:37:41,352 INFO Riley connected and flooded msg AT Riley +0.0015406608581542969 client_1 +34.06893-118.445127 1622759861.3492396 to neighbour server Juzang
+2021-06-03 15:37:41,352 INFO Riley closed connection to Juzang
+2021-06-03 15:37:41,352 INFO Riley sent AT Riley +0.0015406608581542969 client_1 +34.06893-118.445127 1622759861.3492396 to client
+2021-06-03 15:37:41,352 INFO Close the client socket
+2021-06-03 15:37:41,353 INFO Riley received message WHATSAT client_1 10 5
 
-2021-06-03 15:28:02,446 INFO Riley received message AT Riley +0.0013723373413085938 client_1 +34.06893-118.445127 1622759282.4416578
-2021-06-03 15:28:02,446 INFO Riley received msg from another server
-2021-06-03 15:28:02,446 INFO Already encountered and less recent, do nothing
-2021-06-03 15:28:02,446 INFO Close the client socket
-2021-06-03 15:28:02,537 INFO Riley queried 3 locations from Google Place API
-2021-06-03 15:28:02,537 INFO Riley sent AT Riley +0.0013723373413085938 client_1 +34.06893-118.445127 1622759282.4416578
+2021-06-03 15:37:41,355 INFO Riley received message AT Riley +0.0015406608581542969 client_1 +34.06893-118.445127 1622759861.3492396
+2021-06-03 15:37:41,356 INFO Riley received msg from another server
+2021-06-03 15:37:41,356 INFO Already encountered and less recent, do nothing
+2021-06-03 15:37:41,356 INFO Close the client socket
+2021-06-03 15:37:41,431 INFO Riley queried 3 locations from Google Place API
+2021-06-03 15:37:41,432 INFO Riley sent AT Riley +0.0015406608581542969 client_1 +34.06893-118.445127 1622759861.3492396
 {
     "html_attributions": [],
     "results": [
@@ -331,7 +331,7 @@
                     "html_attributions": [
                         "<a href=\"https://maps.google.com/maps/contrib/109886582985269547008\">TIAN XIA</a>"
                     ],
-                    "photo_reference": "ATtYBwI5bnkJn9BsQ1uMJ6UsLoVMn0zoaiwTsEPy5Xg-xon8wWXQcDcKd9eSWfS3_jWwM8TsKWG4dLViidApNZgF2Z9s69q7xJ2PCiVmr18DZks7tQgkkMdLorSo654ElSaWYrDm_sEoEQgtxHR_Z1kfjyviY4Lcln33UAO8Q0F0u-X0fYLT",
+                    "photo_reference": "ATtYBwIN8tA1HaAHe0GADGJAAjwXCMLUQf0vqwZqpi3iWxAbrE2Tc4LcZ-0nqW-pd6glXEfzAH11vKdotS8T7CHZJPfYbLWH6eWt1LRT-EPafX3Q4IegdG8RVpJkF3h-GOzQKa0dgIjzL_AcFYiB5BuikvxrW8HkSFWk9nC4Li0ifaOvdSan",
                     "width": 4032
                 }
             ],
@@ -376,7 +376,7 @@
                     "html_attributions": [
                         "<a href=\"https://maps.google.com/maps/contrib/109318379905931372178\">Shoaib Kashmiri</a>"
                     ],
-                    "photo_reference": "ATtYBwIFKj8gbQULSm26PzJWTWXhh6A2rjeq8kOzDsZB5os1Qm0Ow6EZ01kWjHJXf6DptGul1j1YGQ9eX_6dkjb0lt6RY6ITf_hO_LnsWEnGPCGvCZEN6XFck0edJpeOs94Z8UfE-PQLJCIcabAhx0iYcNMd3ZP8NYriik-ut36beOZkJi5u",
+                    "photo_reference": "ATtYBwKdfOLcqOCr5X45l_XJ3kf8Ljc8CiqOAA3eMAApcVHsaeq_Inoi1tOQsnrw6HVz-YdUtD8Z-BpaliN6dqCVUsFjobwbQ4b8iY3VUXcccdkAzvIUjtgG1nz3Ksd5zgif6WEST-M_MuvWJ0ijxE6W6-GrUvD9LWWVuGX2hqebB8nTTOeQ",
                     "width": 640
                 }
             ],
@@ -392,22 +392,22 @@
     ],
     "status": "OK"
 } to client
-2021-06-03 15:28:02,537 INFO Close the client socket
-2021-06-03 15:28:10,819 INFO Riley received message IAMAT client_2 +34.06893-118.445127 1622759290.818255
+2021-06-03 15:37:41,432 INFO Close the client socket
+2021-06-03 15:37:49,749 INFO Riley received message IAMAT client_2 +34.06893-118.445127 1622759869.7482464
 
-2021-06-03 15:28:10,820 INFO Riley connected and flooded msg AT Riley +0.0016217231750488281 client_2 +34.06893-118.445127 1622759290.818255 to neighbour server Jaquez
-2021-06-03 15:28:10,820 INFO Riley closed connection to Jaquez
-2021-06-03 15:28:10,821 INFO Flood error: Riley couldn't connect to Juzang
-2021-06-03 15:28:10,821 INFO Riley sent AT Riley +0.0016217231750488281 client_2 +34.06893-118.445127 1622759290.818255 to client
-2021-06-03 15:28:10,821 INFO Close the client socket
-2021-06-03 15:28:10,823 INFO Riley received message WHATSAT client_2 10 5
+2021-06-03 15:37:49,750 INFO Riley connected and flooded msg AT Riley +0.0015900135040283203 client_2 +34.06893-118.445127 1622759869.7482464 to neighbour server Jaquez
+2021-06-03 15:37:49,750 INFO Riley closed connection to Jaquez
+2021-06-03 15:37:49,751 INFO Flood error: Riley couldn't connect to Juzang
+2021-06-03 15:37:49,751 INFO Riley sent AT Riley +0.0015900135040283203 client_2 +34.06893-118.445127 1622759869.7482464 to client
+2021-06-03 15:37:49,751 INFO Close the client socket
+2021-06-03 15:37:49,756 INFO Riley received message AT Riley +0.0015900135040283203 client_2 +34.06893-118.445127 1622759869.7482464
+2021-06-03 15:37:49,756 INFO Riley received msg from another server
+2021-06-03 15:37:49,756 INFO Already encountered and less recent, do nothing
+2021-06-03 15:37:49,757 INFO Close the client socket
+2021-06-03 15:37:49,757 INFO Riley received message WHATSAT client_2 10 5
 
-2021-06-03 15:28:10,824 INFO Riley received message AT Riley +0.0016217231750488281 client_2 +34.06893-118.445127 1622759290.818255
-2021-06-03 15:28:10,824 INFO Riley received msg from another server
-2021-06-03 15:28:10,824 INFO Already encountered and less recent, do nothing
-2021-06-03 15:28:10,824 INFO Close the client socket
-2021-06-03 15:28:10,912 INFO Riley queried 3 locations from Google Place API
-2021-06-03 15:28:10,913 INFO Riley sent AT Riley +0.0016217231750488281 client_2 +34.06893-118.445127 1622759290.818255
+2021-06-03 15:37:49,841 INFO Riley queried 3 locations from Google Place API
+2021-06-03 15:37:49,842 INFO Riley sent AT Riley +0.0015900135040283203 client_2 +34.06893-118.445127 1622759869.7482464
 {
     "html_attributions": [],
     "results": [
@@ -464,7 +464,7 @@
                     "html_attributions": [
                         "<a href=\"https://maps.google.com/maps/contrib/109886582985269547008\">TIAN XIA</a>"
                     ],
-                    "photo_reference": "ATtYBwKjj4azwqohepjb91dwwpqJtXyzJpkYQor4lIcLa0LpIa0R9pB9gaZOMQZ9LFHK9PoEQ_vLohV9Q7gJSofeJojWSMkc2qQL_ulACO8IHwFYpeNg2SCwVisyLjpnYVuAxMEcZVAi_-GkBTyc2sLk5-TzCMl3IC-ocdE53cB_jcQhOhcn",
+                    "photo_reference": "ATtYBwL_13M5NqTxyS9Xf4DuxcHbxMWpzodoWV4H2ATg8vI0usDz_pAi4OVVw7SeIcF1HNyIucdneupgjhQQURVv_d5QYtBGOcvwsIxi4fdQcT_93Du9yck-iok82DTAnnacA_j8laHazZg1yjPjoPmKIdYwPIEUuYHZPjWwvgys-mDUWi3P",
                     "width": 4032
                 }
             ],
@@ -509,7 +509,7 @@
                     "html_attributions": [
                         "<a href=\"https://maps.google.com/maps/contrib/109318379905931372178\">Shoaib Kashmiri</a>"
                     ],
-                    "photo_reference": "ATtYBwJguuCDf6qpRxEP-sqERitS5t2S5Xg1sGcl-RHK5Co-haTJ1-X2jnEwLi_aGAH_CPrLaEVZAGXMfFKbavsDVmTJYgdy_It4s6kpc0wmaOwKHQGppXBmuadC1mDAij-I1sTVDFfqa7DJOMQV2H95Om8iaLEnixgxtW68TiLmsla3KuAn",
+                    "photo_reference": "ATtYBwKhQWVpypXmI67KBaaVDRm-w0pPb2xUNzxxzs46-novfChYXq2alzWCZqWQjMeotCePTymeqzh4v85OmDdO1rGyHb2pCTQLqESMHqqiWHG-e5mUAOwwyAI4BTsHzATJdANy_gbJVAXQMdwpOVnHeYTNxIYns5kEfL0uz_PlBTe-u0v6",
                     "width": 640
                 }
             ],
@@ -525,22 +525,22 @@
     ],
     "status": "OK"
 } to client
-2021-06-03 15:28:10,913 INFO Close the client socket
-2021-06-03 15:28:15,171 INFO Riley received message IAMAT client_2 +34.06893-118.445127 1622759295.1701458
+2021-06-03 15:37:49,842 INFO Close the client socket
+2021-06-03 15:37:54,125 INFO Riley received message IAMAT client_2 +34.06893-118.445127 1622759874.124207
 
-2021-06-03 15:28:15,172 INFO Riley connected and flooded msg AT Riley +0.0014908313751220703 client_2 +34.06893-118.445127 1622759295.1701458 to neighbour server Jaquez
-2021-06-03 15:28:15,172 INFO Riley closed connection to Jaquez
-2021-06-03 15:28:15,173 INFO Flood error: Riley couldn't connect to Juzang
-2021-06-03 15:28:15,173 INFO Riley sent AT Riley +0.0014908313751220703 client_2 +34.06893-118.445127 1622759295.1701458 to client
-2021-06-03 15:28:15,173 INFO Close the client socket
-2021-06-03 15:28:15,174 INFO Riley received message AT Riley +0.0014908313751220703 client_2 +34.06893-118.445127 1622759295.1701458
-2021-06-03 15:28:15,174 INFO Riley received msg from another server
-2021-06-03 15:28:15,174 INFO Already encountered and less recent, do nothing
-2021-06-03 15:28:15,174 INFO Close the client socket
-2021-06-03 15:28:15,175 INFO Riley received message WHATSAT client_2 10 5
+2021-06-03 15:37:54,126 INFO Riley connected and flooded msg AT Riley +0.0013890266418457031 client_2 +34.06893-118.445127 1622759874.124207 to neighbour server Jaquez
+2021-06-03 15:37:54,126 INFO Riley closed connection to Jaquez
+2021-06-03 15:37:54,127 INFO Flood error: Riley couldn't connect to Juzang
+2021-06-03 15:37:54,127 INFO Riley sent AT Riley +0.0013890266418457031 client_2 +34.06893-118.445127 1622759874.124207 to client
+2021-06-03 15:37:54,127 INFO Close the client socket
+2021-06-03 15:37:54,128 INFO Riley received message AT Riley +0.0013890266418457031 client_2 +34.06893-118.445127 1622759874.124207
+2021-06-03 15:37:54,128 INFO Riley received msg from another server
+2021-06-03 15:37:54,128 INFO Already encountered and less recent, do nothing
+2021-06-03 15:37:54,128 INFO Close the client socket
+2021-06-03 15:37:54,129 INFO Riley received message WHATSAT client_2 10 5
 
-2021-06-03 15:28:15,265 INFO Riley queried 3 locations from Google Place API
-2021-06-03 15:28:15,266 INFO Riley sent AT Riley +0.0014908313751220703 client_2 +34.06893-118.445127 1622759295.1701458
+2021-06-03 15:37:54,195 INFO Riley queried 3 locations from Google Place API
+2021-06-03 15:37:54,196 INFO Riley sent AT Riley +0.0013890266418457031 client_2 +34.06893-118.445127 1622759874.124207
 {
     "html_attributions": [],
     "results": [
@@ -597,7 +597,7 @@
                     "html_attributions": [
                         "<a href=\"https://maps.google.com/maps/contrib/109886582985269547008\">TIAN XIA</a>"
                     ],
-                    "photo_reference": "ATtYBwL1Uq9CKlPumIwYW1m89l4Hz2STuSCl0GrP5Mf15pbbK8Uox243cVY4g6PV-Mo0gmb2cq_sVD6hcCkUnegAJijKigy08FgqiBAY-wHtA22Eme3FsAQt2j3Tzs0jUnKRaZMdk8ENqx3FLpSCKLj3-0qjysQ3cLZd9yZsxr29nbVahi-O",
+                    "photo_reference": "ATtYBwJV4dg6hZSi1RzyJgHeqMPP-19h7aayPMCSYxAn0W2skXy250IPKzJSH4zRk3_NKCS8XIZs5YRue9M1qeohNOi5BsXI371rGywvk9rTUYSvgfTheYOG5-cPO98iyIrwpLmZw-A1-tOVjbrQXsH1UFVQjf2JoR46FiORGELnD9fQyirE",
                     "width": 4032
                 }
             ],
@@ -642,7 +642,7 @@
                     "html_attributions": [
                         "<a href=\"https://maps.google.com/maps/contrib/109318379905931372178\">Shoaib Kashmiri</a>"
                     ],
-                    "photo_reference": "ATtYBwLRD2OlPr_StMozlYYsWMMEHcBUHmajihxwlIMu54X4OnnnMISf9KH3xt7PqUPJJPU9OoqYfgjMF7LKox7WqFeMMnZ2Wa6eG46zV3MMymagS0nbPopXbNkILbRPlRv7oTDVmuPKYSDIeTqv3eBei8zvC0NgqhTKU9-E1qBqZ3KPWomf",
+                    "photo_reference": "ATtYBwKmznFTb-RYmYhwSOwwtJ-dJqD8Dd9oPhbywoqY_sLk9R4MwjBOtpcsHbC0_YAoK0WESjrygATbmjyBSJFEbpV6Zg2Q43ICtkyvkQFpnF2m25YC3LLCMa1cX1IZ__SPdFVdcfsuPfu7kHx_MZHGahuk27CV_VkX8RyL4-kc_fxBE9eW",
                     "width": 640
                 }
             ],
@@ -658,27 +658,27 @@
     ],
     "status": "OK"
 } to client
-2021-06-03 15:28:15,266 INFO Close the client socket
-2021-06-03 15:28:23,450 INFO Riley received message IAMAT client_3 +34.06893-118.445127 1622759303.4492679
+2021-06-03 15:37:54,196 INFO Close the client socket
+2021-06-03 15:38:02,386 INFO Riley received message IAMAT client_3 +34.06893-118.445127 1622759882.3852417
 
-2021-06-03 15:28:23,451 INFO Riley connected and flooded msg AT Riley +0.0013043880462646484 client_3 +34.06893-118.445127 1622759303.4492679 to neighbour server Jaquez
-2021-06-03 15:28:23,451 INFO Riley closed connection to Jaquez
-2021-06-03 15:28:23,452 INFO Riley connected and flooded msg AT Riley +0.0013043880462646484 client_3 +34.06893-118.445127 1622759303.4492679 to neighbour server Juzang
-2021-06-03 15:28:23,452 INFO Riley closed connection to Juzang
-2021-06-03 15:28:23,452 INFO Riley sent AT Riley +0.0013043880462646484 client_3 +34.06893-118.445127 1622759303.4492679 to client
-2021-06-03 15:28:23,453 INFO Close the client socket
-2021-06-03 15:28:23,454 INFO Riley received message AT Riley +0.0013043880462646484 client_3 +34.06893-118.445127 1622759303.4492679
-2021-06-03 15:28:23,454 INFO Riley received msg from another server
-2021-06-03 15:28:23,454 INFO Already encountered and less recent, do nothing
-2021-06-03 15:28:23,454 INFO Close the client socket
-2021-06-03 15:28:23,455 INFO Riley received message WHATSAT client_3 10 5
+2021-06-03 15:38:02,387 INFO Riley connected and flooded msg AT Riley +0.0015175342559814453 client_3 +34.06893-118.445127 1622759882.3852417 to neighbour server Jaquez
+2021-06-03 15:38:02,387 INFO Riley closed connection to Jaquez
+2021-06-03 15:38:02,388 INFO Riley connected and flooded msg AT Riley +0.0015175342559814453 client_3 +34.06893-118.445127 1622759882.3852417 to neighbour server Juzang
+2021-06-03 15:38:02,388 INFO Riley closed connection to Juzang
+2021-06-03 15:38:02,388 INFO Riley sent AT Riley +0.0015175342559814453 client_3 +34.06893-118.445127 1622759882.3852417 to client
+2021-06-03 15:38:02,388 INFO Close the client socket
+2021-06-03 15:38:02,390 INFO Riley received message WHATSAT client_3 10 5
 
-2021-06-03 15:28:23,456 INFO Riley received message AT Riley +0.0013043880462646484 client_3 +34.06893-118.445127 1622759303.4492679
-2021-06-03 15:28:23,456 INFO Riley received msg from another server
-2021-06-03 15:28:23,456 INFO Already encountered and less recent, do nothing
-2021-06-03 15:28:23,457 INFO Close the client socket
-2021-06-03 15:28:23,556 INFO Riley queried 3 locations from Google Place API
-2021-06-03 15:28:23,557 INFO Riley sent AT Riley +0.0013043880462646484 client_3 +34.06893-118.445127 1622759303.4492679
+2021-06-03 15:38:02,390 INFO Riley received message AT Riley +0.0015175342559814453 client_3 +34.06893-118.445127 1622759882.3852417
+2021-06-03 15:38:02,391 INFO Riley received msg from another server
+2021-06-03 15:38:02,391 INFO Already encountered and less recent, do nothing
+2021-06-03 15:38:02,391 INFO Close the client socket
+2021-06-03 15:38:02,391 INFO Riley received message AT Riley +0.0015175342559814453 client_3 +34.06893-118.445127 1622759882.3852417
+2021-06-03 15:38:02,391 INFO Riley received msg from another server
+2021-06-03 15:38:02,391 INFO Already encountered and less recent, do nothing
+2021-06-03 15:38:02,392 INFO Close the client socket
+2021-06-03 15:38:02,489 INFO Riley queried 3 locations from Google Place API
+2021-06-03 15:38:02,490 INFO Riley sent AT Riley +0.0015175342559814453 client_3 +34.06893-118.445127 1622759882.3852417
 {
     "html_attributions": [],
     "results": [
@@ -735,7 +735,7 @@
                     "html_attributions": [
                         "<a href=\"https://maps.google.com/maps/contrib/109886582985269547008\">TIAN XIA</a>"
                     ],
-                    "photo_reference": "ATtYBwIgA0OX75TYMv0g6Tie3sJkMOuPGGBZOvnNxEBhz_5_aRcPZqKncFYH3PhUVcKLg1Tg6AtPCHS9V0QBlBF8pfdplRRNBwZfe-WBXvChNPzZoO65V1-VbKa1g5tOBs1a4266WVhJOGI4vgCkCWeJrTUFP7mP-0UrfPhlNxLceYl6BAF-",
+                    "photo_reference": "ATtYBwLLfDyu6SxKtGJkuN1H5AgM6e4pj1wUatcg1KrFTMJiLTXWSPutM3ppnzNt43tjZDuwvsDVSxlQ0u04H-rOj9XPkQLy5bTuoxiNepzwSRqADRPnud3iFSg_G9qN5gcCV509RSiXlm7dYXzeOfnBD62v1qweFNULeOQYiiSO8PsmybdT",
                     "width": 4032
                 }
             ],
@@ -780,7 +780,7 @@
                     "html_attributions": [
                         "<a href=\"https://maps.google.com/maps/contrib/109318379905931372178\">Shoaib Kashmiri</a>"
                     ],
-                    "photo_reference": "ATtYBwJIMFBLJTCRCrBXOB6_sfJpQTxqwGn49mL-LcxEQhA6gsbsp7xILBJiFx03FgUKXDyN3lV6MwW8niPsq--c3fMcM09XcCVn-wpFMzPyvYal9IVipyrfZn5aJWYz7NvzwqLUHSqoVvBgN0cWsV7zN42_u_XvuLVLp7MwR9MFCwhhhBG1",
+                    "photo_reference": "ATtYBwIzPTv8r0uLZVEZ34MA9Jkf_bQ97QOGiL0yLukjlFw8fnbHkwsSdkrAU56UHxggXXXX7ZjNJOFB4-SX6Qi3PgDbNckd1FTx8bzYl3pq55MJrTcmiWqOe_dXmvNFnksKTOxFSZ1SjCR4hfN0vlOjlJTDsB_39W0BGe0NC5qfzRx_xOO1",
                     "width": 640
                 }
             ],
@@ -796,4 +796,4 @@
     ],
     "status": "OK"
 } to client
-2021-06-03 15:28:23,557 INFO Close the client socket
+2021-06-03 15:38:02,490 INFO Close the client socket
