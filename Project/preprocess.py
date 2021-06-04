@@ -6,8 +6,6 @@ import sys
 import pandas as pd
 import re
 
-# from TA sample grading script
-
 submissions_dir = "./sample_submission/"
 project_code_fname = ["project.tgz", "project.tar.gz", "report.tgz", "server.tgz", "project.zip"]
 project_file_fname = "server.py"
